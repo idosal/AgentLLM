@@ -31,6 +31,7 @@ interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;
   className?: string;
   showDonation: boolean;
+  isInitialized: boolean;
   fullscreen?: boolean;
   scrollToBottom?: boolean;
 }
@@ -46,9 +47,11 @@ const ChatWindow = ({
   onSave,
   fullscreen,
   scrollToBottom,
+  isInitialized
 }: ChatWindowProps) => {
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isUnsupported, setIsUnsupported] = useState(false);
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
@@ -60,6 +63,10 @@ const ChatWindow = ({
       setHasUserScrolled(false);
     }
   };
+
+  useEffect(() => {
+    setIsUnsupported(!window?.navigator?.gpu);
+  }, [])
 
   useEffect(() => {
     // Scroll to bottom on re-renders
@@ -90,35 +97,45 @@ const ChatWindow = ({
       >
         {messages.map((message, index) => (
           <FadeIn key={`${index}-${message.type}`}>
-            <ChatMessage message={message} />
+            <ChatMessage message={message} isInitialized={isInitialized} />
           </FadeIn>
         ))}
         {children}
 
         {messages.length === 0 && (
           <>
+
+            <Expand delay={0.7} type="spring">
+              <ChatMessage
+                message={{
+                  type: "system",
+                  value:
+                    "🏠 BrowserGPT runs locally on your browser, without OpenAI. It's private, and free!",
+                }}
+              />
+              {showDonation && (
+                <Expand delay={0.9} type="spring">
+                  <DonationMessage />
+                </Expand>
+              )}
+            </Expand>
+            {isUnsupported && <Expand delay={0.8} type="spring">
+              <ChatMessage
+                message={{
+                  type: "system",
+                  value:
+                    "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try BrowserGPT in Chrome Canary on a mid-high tier desktop (see 'Help')",
+                }}
+              />
+            </Expand>}
             <Expand delay={0.8} type="spring">
               <ChatMessage
                 message={{
                   type: "system",
                   value:
-                    "> Create an agent by adding a name / goal, and hitting deploy!",
+                    "> Create an agent by writing a goal and hitting deploy!",
                 }}
               />
-            </Expand>
-            <Expand delay={0.9} type="spring">
-              <ChatMessage
-                message={{
-                  type: "system",
-                  value:
-                    "📢 You can provide your own OpenAI API key in the settings tab for increased limits!",
-                }}
-              />
-              {showDonation && (
-                <Expand delay={0.7} type="spring">
-                  <DonationMessage />
-                </Expand>
-              )}
             </Expand>
           </>
         )}
@@ -248,7 +265,7 @@ const MacWindowHeader = (props: HeaderProps) => {
     </div>
   );
 };
-const ChatMessage = ({ message }: { message: Message }) => {
+const ChatMessage = ({ message, isInitialized }: { message: Message, isInitialized: boolean }) => {
   const [showCopy, setShowCopy] = useState(false);
   const [copied, setCopied] = useState(false);
   const handleCopyClick = () => {
@@ -285,9 +302,9 @@ const ChatMessage = ({ message }: { message: Message }) => {
         </>
       )}
 
-      {message.type == "thinking" && (
+      {message.type == "thinking" && !isInitialized && (
         <span className="italic text-zinc-400">
-          (Restart if this takes more than 30 seconds)
+          First initialization may take up to a few minutes but future initializations will be instantaneous (if it takes more than a few minutes, your machine or internet connection may not meet the minimum requirements)
         </span>
       )}
 

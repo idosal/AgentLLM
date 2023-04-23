@@ -11,7 +11,7 @@ interface LayoutProps {
 
 const DefaultLayout = (props: LayoutProps) => {
   const description =
-    "Assemble, configure, and deploy autonomous AI Agents in your browser.";
+    "Autonomous AI Agents native to your browser";
   return (
     <div
       className={clsx(
@@ -20,7 +20,7 @@ const DefaultLayout = (props: LayoutProps) => {
       )}
     >
       <Head>
-        <title>AgentGPT</title>
+        <title>BrowserGPT</title>
         <meta name="description" content={description} />
         <meta name="twitter:site" content="@AgentGPT" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -34,11 +34,11 @@ const DefaultLayout = (props: LayoutProps) => {
         <meta name="twitter:image:height" content="640" />
         <meta
           property="og:title"
-          content="AgentGPT: Autonomous AI in your browser 🤖"
+          content="BrowserGPT: Autonomous AI in your browser"
         />
         <meta
           property="og:description"
-          content="Assemble, configure, and deploy autonomous AI Agents in your browser."
+          content="Autonomous AI Agents native to your browser"
         />
         <meta property="og:url" content="https://agentgpt.reworkd.ai/" />
         <meta

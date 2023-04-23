@@ -3,7 +3,7 @@ import {
   FaBars,
   FaCog,
   FaDiscord,
-  FaGithub,
+  FaGithub, FaInfo,
   FaQuestionCircle,
   FaRobot,
   FaRocket,
@@ -21,39 +21,39 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
 const Drawer = ({
+  showAbout,
   showHelp,
-  showSettings,
 }: {
+  showAbout: () => void;
   showHelp: () => void;
-  showSettings: () => void;
 }) => {
   const [showDrawer, setShowDrawer] = useState(false);
-  const { session, signIn, signOut, status } = useAuth();
+  // const { session, signIn, signOut, status } = useAuth();
   const router = useRouter();
 
-  const sub = api.account.subscribe.useMutation({
-    onSuccess: async (url) => {
-      if (!url) return;
-      await router.push(url);
-    },
-  });
+  // const sub = api.account.subscribe.useMutation({
+  //   onSuccess: async (url) => {
+  //     if (!url) return;
+  //     await router.push(url);
+  //   },
+  // });
 
-  const query = api.agent.getAll.useQuery(undefined, {
-    enabled: !!session?.user,
-  });
+  // const query = api.agent.getAll.useQuery(undefined, {
+  //   enabled: !!session?.user,
+  // });
 
-  const manage = api.account.manage.useMutation({
-    onSuccess: async (url) => {
-      if (!url) return;
-      await router.push(url);
-    },
-  });
+  // const manage = api.account.manage.useMutation({
+  //   onSuccess: async (url) => {
+  //     if (!url) return;
+  //     await router.push(url);
+  //   },
+  // });
 
   const toggleDrawer = () => {
     setShowDrawer((prevState) => !prevState);
   };
 
-  const userAgents = query.data ?? [];
+  // const userAgents = query.data ?? [];
 
   return (
     <>
@@ -73,60 +73,60 @@ const Drawer = ({
           "flex md:translate-x-0"
         )}
       >
-        <div className="flex flex-col gap-1 overflow-hidden">
-          <div className="mb-2 flex justify-center gap-2">
-            My Agent(s)
-            <button
-              className="z-40 rounded-md border-2 border-white/20 bg-zinc-900 p-2 text-white hover:bg-zinc-700 md:hidden"
-              onClick={toggleDrawer}
-            >
-              <FaBars />
-            </button>
-          </div>
-          <ul className="flex flex-col gap-2 overflow-auto">
-            {userAgents.map((agent, index) => (
-              <DrawerItem
-                key={index}
-                icon={<FaRobot />}
-                text={agent.name}
-                className="w-full"
-                onClick={() => void router.push(`/agent?id=${agent.id}`)}
-              />
-            ))}
+        {/*<div className="flex flex-col gap-1 overflow-hidden">*/}
+        {/*  <div className="mb-2 flex justify-center gap-2">*/}
+        {/*    My Agent(s)*/}
+        {/*    <button*/}
+        {/*      className="z-40 rounded-md border-2 border-white/20 bg-zinc-900 p-2 text-white hover:bg-zinc-700 md:hidden"*/}
+        {/*      onClick={toggleDrawer}*/}
+        {/*    >*/}
+        {/*      <FaBars />*/}
+        {/*    </button>*/}
+        {/*  </div>*/}
+        {/*  <ul className="flex flex-col gap-2 overflow-auto">*/}
+        {/*    {userAgents.map((agent, index) => (*/}
+        {/*      <DrawerItem*/}
+        {/*        key={index}*/}
+        {/*        icon={<FaRobot />}*/}
+        {/*        text={agent.name}*/}
+        {/*        className="w-full"*/}
+        {/*        onClick={() => void router.push(`/agent?id=${agent.id}`)}*/}
+        {/*      />*/}
+        {/*    ))}*/}
 
-            {status === "unauthenticated" && (
-              <div>
-                Sign in to be able to save agents and manage your account!
-              </div>
-            )}
-            {status === "authenticated" && userAgents.length === 0 && (
-              <div>
-                You need to create and save your first agent before anything
-                shows up here!
-              </div>
-            )}
-          </ul>
-        </div>
+        {/*    {status === "unauthenticated" && (*/}
+        {/*      <div>*/}
+        {/*        Sign in to be able to save agents and manage your account!*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+        {/*    {status === "authenticated" && userAgents.length === 0 && (*/}
+        {/*      <div>*/}
+        {/*        You need to create and save your first agent before anything*/}
+        {/*        shows up here!*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+        {/*  </ul>*/}
+        {/*</div>*/}
 
         <div className="flex flex-col gap-1">
           <hr className="my-2 border-gray-600/10" />
-          {env.NEXT_PUBLIC_FF_SUB_ENABLED ||
-            (router.query.pro && (
-              <ProItem
-                sub={sub.mutate}
-                manage={manage.mutate}
-                session={session}
-              />
-            ))}
-          {env.NEXT_PUBLIC_FF_AUTH_ENABLED && (
-            <AuthItem session={session} signIn={signIn} signOut={signOut} />
-          )}
+          {/*{env.NEXT_PUBLIC_FF_SUB_ENABLED ||*/}
+          {/*  (router.query.pro && (*/}
+          {/*    <ProItem*/}
+          {/*      sub={sub.mutate}*/}
+          {/*      manage={manage.mutate}*/}
+          {/*      session={session}*/}
+          {/*    />*/}
+          {/*  ))}*/}
+          {/*{env.NEXT_PUBLIC_FF_AUTH_ENABLED && (*/}
+          {/*  <AuthItem session={session} signIn={signIn} signOut={signOut} />*/}
+          {/*)}*/}
           <DrawerItem
-            icon={<FaQuestionCircle />}
-            text="Help"
-            onClick={showHelp}
+            icon={<FaInfo />}
+            text="About"
+            onClick={showAbout}
           />
-          <DrawerItem icon={<FaCog />} text="Settings" onClick={showSettings} />
+          <DrawerItem icon={<FaQuestionCircle />} text="Help" onClick={showHelp} />
           <DrawerItem
             icon={<FaGithub />}
             text="GitHub"
@@ -134,6 +134,14 @@ const Drawer = ({
             target="_blank"
           />
         </div>
+        <a
+          href="https://github.com/reworkd/AgentGPT"
+          className="mb-2 flex justify-center gap-2"
+          style={{padding: '0.5rem'}}
+          target={"_blank"}
+        >
+          Please consider sponsoring AgentGPT (the template for this project)
+        </a>
       </div>
     </>
   );

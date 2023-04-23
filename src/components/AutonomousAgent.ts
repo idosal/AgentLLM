@@ -122,7 +122,7 @@ class AutonomousAgent {
     } catch (e) {
       console.log(e);
       this.sendErrorMessage(
-        `ERROR adding additional task(s). It might have been against our model's policies to run them. Continuing.`
+        `❌ ERROR adding additional task(s). It might have been against our model's policies to run them. Continuing.`
       );
       this.sendActionMessage("Task marked as complete.");
     }
@@ -142,9 +142,9 @@ class AutonomousAgent {
 
   async getInitialTasks(): Promise<string[]> {
     if (this.shouldRunClientSide()) {
-      if (!env.NEXT_PUBLIC_FF_MOCK_MODE_ENABLED) {
-        await testConnection(this.modelSettings);
-      }
+      // if (!env.NEXT_PUBLIC_FF_MOCK_MODE_ENABLED) {
+      //   await testConnection(this.modelSettings);
+      // }
       return await AgentService.startGoalAgent(this.modelSettings, this.goal);
     }
 
@@ -220,7 +220,7 @@ class AutonomousAgent {
   }
 
   private shouldRunClientSide() {
-    return this.modelSettings.customApiKey != "";
+    return true;
   }
 
   stopAgent() {
@@ -324,8 +324,10 @@ const getMessageFromError = (e: unknown) => {
     if (axiosError.response?.status === 404) {
       message = `ERROR your API key does not have GPT-4 access. You must first join OpenAI's wait-list. (This is different from ChatGPT Plus)`;
     }
+  } else if (e.message === "This browser env do not support WebGPU") {
+    message = `❌ Error initializing the local LLM. Your browser does not support WebGPU. Please retry on Chrome Canary (see 'Help'). Shutting Down.`;
   } else {
-    message = `ERROR retrieving initial tasks array. Retry, make your goal more clear, or revise your goal such that it is within our model's policies to run. Shutting Down.`;
+    message = `❌ Error retrieving initial tasks array. Retry, make your goal more clear, or revise your goal such that it is within our model's policies to run. Shutting Down.`;
   }
   return message;
 };

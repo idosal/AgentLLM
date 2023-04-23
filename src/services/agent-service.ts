@@ -8,16 +8,34 @@ import type { ModelSettings } from "../utils/types";
 import { env } from "../env/client.mjs";
 import { LLMChain } from "langchain/chains";
 import { extractTasks } from "../utils/helpers";
+import { isTooManyTries, retryAsync } from "ts-retry";
 
 async function startGoalAgent(modelSettings: ModelSettings, goal: string) {
-  const completion = await new LLMChain({
-    llm: createModel(modelSettings),
-    prompt: startGoalPrompt,
-  }).call({
-    goal,
-  });
-  console.log("Completion:" + (completion.text as string));
-  return extractTasks(completion.text as string, []);
+  async function startGoal() {
+    const completion = await new LLMChain({
+      llm: createModel(modelSettings),
+      prompt: startGoalPrompt,
+    }).call({
+      goal,
+    });
+    console.log("Completion:" + (completion.text as string));
+    return extractTasks(completion.text as string, []);
+  }
+
+  try {
+    return await retryAsync(startGoal, {
+      delay: 0,
+      maxTry: 5,
+      until: (lastResult) => !!lastResult?.length,
+    });
+  } catch (err) {
+    if (isTooManyTries(err)) {
+      console.log("Failed to start goal", err);
+      return [];
+    } else {
+      throw err;
+    }
+  }
 }
 
 async function executeTaskAgent(
@@ -44,17 +62,23 @@ async function createTasksAgent(
   result: string,
   completedTasks: string[] | undefined
 ) {
-  const completion = await new LLMChain({
-    llm: createModel(modelSettings),
-    prompt: createTasksPrompt,
-  }).call({
-    goal,
-    tasks,
-    lastTask,
-    result,
-  });
+  console.log("createTasksAgent", goal, tasks, result);
 
-  return extractTasks(completion.text as string, completedTasks || []);
+  async function createTask() {
+    const completion = await new LLMChain({
+      llm: createModel(modelSettings),
+      prompt: createTasksPrompt,
+    }).call({
+      goal,
+      tasks,
+      lastTask,
+      result,
+    });
+
+    return extractTasks(completion.text as string, completedTasks || []);
+  }
+
+  return createTask();
 }
 
 interface AgentService {
@@ -108,6 +132,4 @@ const MockAgentService: AgentService = {
   },
 };
 
-export default env.NEXT_PUBLIC_FF_MOCK_MODE_ENABLED
-  ? MockAgentService
-  : OpenAIAgentService;
+export default OpenAIAgentService;

@@ -10,49 +10,53 @@ export default function HelpDialog({
   close: () => void;
 }) {
   return (
-    <Dialog header="Welcome to AgentGPT 🤖" isShown={show} close={close}>
+    <Dialog header="Help" isShown={show} close={close}>
       <div className="text-md relative flex-auto p-2 leading-relaxed">
+        <p>Since running the model locally is very taxing, lower-tier machines may not be able to run this PoC.
+          For the best experience, try BrowserGPT on a powerful desktop device.</p>
+        <br/>
         <p>
-          <strong>AgentGPT</strong> allows you to configure and deploy
-          Autonomous AI agents. Name your custom AI and have it embark on any
-          goal imaginable. It will attempt to reach the goal by thinking of
-          tasks to do, executing them, and learning from the results 🚀
+          Getting started:
         </p>
-        <div>
-          <br />
-          This platform is currently in beta, we are currently working on:
-          <ul className="ml-5 list-inside list-disc">
-            <li>Long term memory 🧠</li>
-            <li>Web browsing 🌐</li>
-            <li>Interaction with websites and people 👨‍👩‍👦</li>
-          </ul>
-          <br />
-          <p className="mt-2">Follow the journey below:</p>
-        </div>
+        <ul>
+          <li>
+            1. Install{" "}
+            <a href={"https://www.google.com/chrome/canary/"}  target={"_blank"} rel={'noreferrer'}>
+              <u>Chrome Canary</u> 🐦. Currently, it is the only browser that supports the required WebGPU feature.
+            </a>
+          </li>
+          <li>
+            2. Launch Chrome Canary (preferably with --enable-dawn-features=disable_robustness).
+          </li>
+          <li>For example, in MacOS, run the following command in the terminal: /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness
+          </li>
+          <li>
+            3. Navigate to BrowserGPT
+          </li>
+        </ul>
+        <br />
+        <p>
+          If you need further assistance, feel free to reach out via Twitter or Github:
+        </p>
         <div className="mt-4 flex w-full items-center justify-center gap-5">
+          {/*<div*/}
+          {/*  className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"*/}
+          {/*  onClick={() =>*/}
+          {/*    window.open("https://discord.gg/jdSBAnmdnY", "_blank")*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  <FaDiscord size={30} />*/}
+          {/*</div>*/}
           <div
             className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
-            onClick={() =>
-              window.open("https://discord.gg/jdSBAnmdnY", "_blank")
-            }
-          >
-            <FaDiscord size={30} />
-          </div>
-          <div
-            className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
-            onClick={() =>
-              window.open(
-                "https://twitter.com/asimdotshrestha/status/1644883727707959296",
-                "_blank"
-              )
-            }
+            onClick={() => window.open("https://twitter.com/idosal1", "_blank")}
           >
             <FaTwitter size={30} />
           </div>
           <div
             className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
             onClick={() =>
-              window.open("https://github.com/reworkd/AgentGPT", "_blank")
+              window.open("https://github.com/idosal/BrowserGPT", "_blank")
             }
           >
             <FaGithub size={30} />

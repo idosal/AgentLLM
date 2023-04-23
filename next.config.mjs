@@ -15,7 +15,7 @@ const config = {
     defaultLocale: "en",
   },
   webpack: function (config, options) {
-    config.experiments = { asyncWebAssembly: true, layers: true };
+    config.experiments = { asyncWebAssembly: true, layers: true, topLevelAwait: true };
     return config;
   }
 };

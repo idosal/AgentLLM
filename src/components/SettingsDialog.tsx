@@ -51,14 +51,14 @@ export default function SettingsDialog({
   }
 
   const handleSave = () => {
-    if (is_valid_key(key)) {
-      setCustomApiKey(key);
-      close();
-    } else {
-      alert(
-        "key is invalid, please ensure that you have set up billing in your OpenAI account"
-      );
-    }
+    // if (is_valid_key(key)) {
+    //   setCustomApiKey(key);
+    //   close();
+    // } else {
+    //   alert(
+    //     "key is invalid, please ensure that you have set up billing in your OpenAI account"
+    //   );
+    // }
   };
 
   React.useEffect(() => {

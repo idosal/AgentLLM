@@ -4,7 +4,6 @@ import {
   FaBrain,
   FaClipboard,
   FaCopy,
-  FaDatabase,
   FaImage,
   FaListAlt,
   FaPlayCircle,
@@ -31,7 +30,7 @@ interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;
   className?: string;
   showDonation: boolean;
-  isInitialized: boolean;
+  isInitialized?: boolean;
   fullscreen?: boolean;
   scrollToBottom?: boolean;
 }

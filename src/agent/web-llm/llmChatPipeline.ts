@@ -320,7 +320,7 @@ async function initTvm(
   return tvm;
 }
 
-export async function generateCompletion(userPrompt: string) {
+export async function generateCompletion(userPrompt: string) : Promise<string> {
   console.log("generateCompletion", userPrompt);
   // Initialize the LLMChatPipeline instance with required configs
   const config = {

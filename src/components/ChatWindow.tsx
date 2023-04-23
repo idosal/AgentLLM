@@ -65,7 +65,7 @@ const ChatWindow = ({
   };
 
   useEffect(() => {
-    setIsUnsupported(!window?.navigator?.gpu);
+    setIsUnsupported(!(window?.navigator as Navigator & { gpu: unknown })?.gpu);
   }, [])
 
   useEffect(() => {
@@ -265,7 +265,7 @@ const MacWindowHeader = (props: HeaderProps) => {
     </div>
   );
 };
-const ChatMessage = ({ message, isInitialized }: { message: Message, isInitialized: boolean }) => {
+const ChatMessage = ({ message, isInitialized }: { message: Message, isInitialized?: boolean }) => {
   const [showCopy, setShowCopy] = useState(false);
   const [copied, setCopied] = useState(false);
   const handleCopyClick = () => {

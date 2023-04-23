@@ -8,7 +8,7 @@ import {
 } from "../utils/constants";
 import type { Session } from "next-auth";
 import type { Message } from "../types/agentTypes";
-import { env } from "../env/client.mjs";
+// import { env } from "../env/client.mjs";
 import { v4 } from "uuid";
 import type { RequestBody } from "../utils/interfaces";
 
@@ -292,26 +292,26 @@ class AutonomousAgent {
     });
   }
 }
-
-const testConnection = async (modelSettings: ModelSettings) => {
-  // A dummy connection to see if the key is valid
-  // Can't use LangChain / OpenAI libraries to test because they have retries in place
-  return await axios.post(
-    "https://api.openai.com/v1/chat/completions",
-    {
-      model: modelSettings.customModelName,
-      messages: [{ role: "user", content: "Say this is a test" }],
-      max_tokens: 7,
-      temperature: 0,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${modelSettings.customApiKey}`,
-      },
-    }
-  );
-};
+//
+// const testConnection = async (modelSettings: ModelSettings) => {
+//   // A dummy connection to see if the key is valid
+//   // Can't use LangChain / OpenAI libraries to test because they have retries in place
+//   return await axios.post(
+//     "https://api.openai.com/v1/chat/completions",
+//     {
+//       model: modelSettings.customModelName,
+//       messages: [{ role: "user", content: "Say this is a test" }],
+//       max_tokens: 7,
+//       temperature: 0,
+//     },
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${modelSettings.customApiKey}`,
+//       },
+//     }
+//   );
+// };
 
 const getMessageFromError = (e: unknown) => {
   let message =
@@ -324,7 +324,7 @@ const getMessageFromError = (e: unknown) => {
     if (axiosError.response?.status === 404) {
       message = `ERROR your API key does not have GPT-4 access. You must first join OpenAI's wait-list. (This is different from ChatGPT Plus)`;
     }
-  } else if (e.message === "This browser env do not support WebGPU") {
+  } else if ((e as { message: string }).message === "This browser env do not support WebGPU") {
     message = `❌ Error initializing the local LLM. Your browser does not support WebGPU. Please retry on Chrome Canary (see 'Help'). Shutting Down.`;
   } else {
     message = `❌ Error retrieving initial tasks array. Retry, make your goal more clear, or revise your goal such that it is within our model's policies to run. Shutting Down.`;

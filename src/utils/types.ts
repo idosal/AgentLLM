@@ -1,5 +1,5 @@
 export type ModelSettings = {
-  customApiKey: string;
+  // customApiKey: string;
   customModelName: string;
   customTemperature: number;
   customMaxLoops: number;

@@ -9,7 +9,6 @@ export interface SaveProps {
 }
 
 export function useAgent() {
-  const { status } = useAuth();
   const utils = api.useContext();
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const voidFunc = () => {};
@@ -22,11 +21,9 @@ export function useAgent() {
     },
   });
 
-  const saveAgent = (data: SaveProps) => {
-    if (status === "authenticated") saveMutation.mutate(data);
-  };
+  // const saveAgent = (data: SaveProps) => {
+  //   if (status === "authenticated") saveMutation.mutate(data);
+  // };
 
-  return {
-    saveAgent,
-  };
+  return () => console.log('not implemented');
 }

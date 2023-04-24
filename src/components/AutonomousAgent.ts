@@ -1,16 +1,12 @@
 import axios from "axios";
-import type { ModelSettings } from "../utils/types";
+import type {ModelSettings} from "../utils/types";
 import AgentService from "../services/agent-service";
-import {
-  DEFAULT_MAX_LOOPS_CUSTOM_API_KEY,
-  DEFAULT_MAX_LOOPS_FREE,
-  DEFAULT_MAX_LOOPS_PAID,
-} from "../utils/constants";
-import type { Session } from "next-auth";
-import type { Message } from "../types/agentTypes";
+import {DEFAULT_MAX_LOOPS_FREE, DEFAULT_MAX_LOOPS_PAID,} from "../utils/constants";
+import type {Session} from "next-auth";
+import type {Message} from "../types/agentTypes";
 // import { env } from "../env/client.mjs";
-import { v4 } from "uuid";
-import type { RequestBody } from "../utils/interfaces";
+import {v4} from "uuid";
+import type {RequestBody} from "../utils/interfaces";
 
 const TIMEOUT_LONG = 1000;
 const TIMOUT_SHORT = 800;
@@ -131,13 +127,9 @@ class AutonomousAgent {
   }
 
   private maxLoops() {
-    const defaultLoops = !!this.session?.user.subscriptionId
+    return !!this.session?.user.subscriptionId
       ? DEFAULT_MAX_LOOPS_PAID
       : DEFAULT_MAX_LOOPS_FREE;
-
-    return !!this.modelSettings.customApiKey
-      ? this.modelSettings.customMaxLoops || DEFAULT_MAX_LOOPS_CUSTOM_API_KEY
-      : defaultLoops;
   }
 
   async getInitialTasks(): Promise<string[]> {
@@ -243,10 +235,7 @@ class AutonomousAgent {
   sendLoopMessage() {
     this.sendMessage({
       type: "system",
-      value:
-        this.modelSettings.customApiKey !== ""
-          ? `This agent has maxed out on loops. To save your wallet, this agent is shutting down. You can configure the number of loops in the advanced settings.`
-          : "We're sorry, because this is a demo, we cannot have our agents running for too long. Note, if you desire longer runs, please provide your own API key in Settings. Shutting down.",
+      value: "We've cut this session short as it seems the agent has lost track. If this is a mistake, please reach out via Github. Shutting down.",
     });
   }
 

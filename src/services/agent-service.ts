@@ -25,7 +25,7 @@ async function startGoalAgent(modelSettings: ModelSettings, goal: string) {
   try {
     return await retryAsync(startGoal, {
       delay: 0,
-      maxTry: 5,
+      maxTry: 7,
       until: (lastResult) => !!lastResult?.length,
     });
   } catch (err) {

@@ -6,16 +6,14 @@ import ChatWindow from "../components/ChatWindow";
 import Drawer from "../components/Drawer";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { FaRobot, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import PopIn from "../components/motions/popin";
 import { VscLoading } from "react-icons/vsc";
 import AutonomousAgent from "../components/AutonomousAgent";
 import Expand from "../components/motions/expand";
 import AboutDialog from "../components/AboutDialog";
-import SettingsDialog from "../components/SettingsDialog";
 import { GPT_35_TURBO, DEFAULT_MAX_LOOPS_FREE } from "../utils/constants";
 import { TaskWindow } from "../components/TaskWindow";
-import { useAuth } from "../hooks/useAuth";
 import type { Message } from "../types/agentTypes";
 import { useAgent } from "../hooks/useAgent";
 import { isEmptyOrBlank } from "../utils/whitespace";
@@ -23,12 +21,11 @@ import useScript from "../hooks/useScript";
 import HelpDialog from "../components/HelpDialog";
 
 const Home: NextPage = () => {
-  const { session, status } = useAuth();
   const name = "BrowserGPT";
   // const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
   const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
-  const [customApiKey, setCustomApiKey] = React.useState<string>("");
+  // const [customApiKey, setCustomApiKey] = React.useState<string>("");
   const [customModelName, setCustomModelName] =
     React.useState<string>(GPT_35_TURBO);
   const [customTemperature, setCustomTemperature] = React.useState<number>(0.9);
@@ -95,8 +92,7 @@ const Home: NextPage = () => {
       goalInput.trim(),
       handleAddMessage,
       () => setAgent(null),
-      { customApiKey, customModelName, customTemperature, customMaxLoops },
-      session ?? undefined
+      { customModelName, customTemperature, customMaxLoops },
     );
     setAgent(agent);
     setHasSaved(false);
@@ -128,11 +124,7 @@ const Home: NextPage = () => {
     </>
   );
 
-  const shouldShowSave =
-    status === "authenticated" &&
-    !agent?.isRunning &&
-    messages.length &&
-    !hasSaved;
+  const shouldShowSave = false;
 
   return (
     <DefaultLayout>
@@ -181,18 +173,18 @@ const Home: NextPage = () => {
               <ChatWindow
                 className="sm:mt-4"
                 messages={messages}
-                title={session?.user.subscriptionId ? proTitle : "BrowserGPT"}
+                title={"BrowserGPT"}
                 showDonation={false}
                 isInitialized={isInitialized}
                 onSave={
                   shouldShowSave
                     ? (format) => {
                         setHasSaved(true);
-                        agentUtils.saveAgent({
-                          goal: goalInput.trim(),
-                          name: name.trim(),
-                          tasks: messages,
-                        });
+                        // agentUtils.saveAgent({
+                        //   goal: goalInput.trim(),
+                        //   name: name.trim(),
+                        //   tasks: messages,
+                        // });
                       }
                     : undefined
                 }

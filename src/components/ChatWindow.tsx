@@ -303,7 +303,7 @@ const ChatMessage = ({ message, isInitialized }: { message: Message, isInitializ
 
       {message.type == "thinking" && !isInitialized && (
         <span className="italic text-zinc-400">
-          First initialization may take up to a few minutes but future initializations will be instantaneous (if it takes more than a few minutes, your machine or internet connection may not meet the minimum requirements)
+          First initialization may take up to a few minutes but future initializations will be quick (if it takes more than a few minutes, your machine or internet connection may not meet the minimum requirements)
         </span>
       )}
 

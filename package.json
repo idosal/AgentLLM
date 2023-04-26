@@ -42,6 +42,7 @@
     "next-auth": "^4.19.0",
     "nextjs-google-analytics": "^2.3.3",
     "react": "18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "react-markdown": "^8.0.7",

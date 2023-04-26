@@ -1,3 +1,5 @@
+<h1>AgentLLM</h1>
+
 <p align="center"><img src="https://user-images.githubusercontent.com/18148989/234702228-c83aef13-9514-4cd6-9537-a72c3a0ca494.png"</img></p>
 
 <p align="center">
@@ -10,7 +12,6 @@
 
 ---
 
-<h1>AgentLLM</h1>
 <b>AgentLLM</b> is the first proof of concept to utilize an open-source large language model (LLM) to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance.
 
 &nbsp;

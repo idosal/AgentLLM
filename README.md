@@ -3,8 +3,6 @@
 <p align="center">
 <a href="https://agentllm.verce/">🔗 Demo</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="#-getting-started">🤝 Contribute</a>
-<span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
 <a href="https://twitter.com/idosal1">🐦 Twitter</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
 <a href="">📢 Medium</a>
@@ -15,8 +13,13 @@
 <h1>AgentLLM</h1>
 <b>AgentLLM</b> is the first proof of concept to utilize an open-source large language model (LLM) to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance.
 
-![image](https://user-images.githubusercontent.com/18148989/234701103-2cc5168d-d131-4588-9133-b3282f1b8f0c.png)
-
+&nbsp;
+  
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/18148989/234701103-2cc5168d-d131-4588-9133-b3282f1b8f0c.png" width=60% height=60%>
+  </p>
+ &nbsp;
+ 
 The implementation of the embedded LLM builds on the fantastic research of <a href="https://github.com/mlc-ai/web-llm">WebLLM</a>, which takes advantage of Chromium's bleeding edge introduction of <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">WebGPU</a> (currently available only on Canary versions) to run inference utilizing the GPU. It offers significant performance gains over the previously available CPU-based implementations.
 
 To create a sanitary and accessible sandbox, I chose to modify the popular <a href="https://github.com/reworkd/AgentGPT">AgentGPT</a> project by replacing ChatGPT with Vicuna7B and changing the prompt mechanism. At its core, AgentGPT allows deploying autonomous agents to perform any arbitrary goal (from basic tasks to complex problem solving) by running a loop of task generation and execution. It's a perfect match for our requirements as its agents do not use tools, eliminating the complexity and unpredictability of external factors (which is present in full-blown implementations of other popular frameworks), and its GUI is friendly and feature-rich. The sandbox enables quick prototyping of the models' ability to break down tasks and plan ahead (try it!).</p>

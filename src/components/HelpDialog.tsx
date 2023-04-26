@@ -12,7 +12,7 @@ export default function HelpDialog({
   return (
     <Dialog header="Help" isShown={show} close={close}>
       <div className="text-md relative flex-auto p-2 leading-relaxed">
-        <p>Since running the model locally is very taxing, lower-tier machines may not be able to run this PoC.
+        <p>Since running the model locally is very taxing, lower-tier devices may not be able to run this PoC.
           For the best experience, try AgentLLM on a powerful desktop device.</p>
         <br/>
         <p>

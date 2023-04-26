@@ -28,7 +28,7 @@ const DefaultLayout = (props: LayoutProps) => {
         <meta name="twitter:description" content={description} />
         <meta
           name="twitter:image"
-          content="https://agentgpt.reworkd.ai/banner.png"
+          content="https://user-images.githubusercontent.com/18148989/234704508-56e08243-256e-4d57-b8ef-338783854ee8.png"
         />
         <meta name="twitter:image:width" content="1280" />
         <meta name="twitter:image:height" content="640" />
@@ -40,10 +40,10 @@ const DefaultLayout = (props: LayoutProps) => {
           property="og:description"
           content="Autonomous AI Agents native to your browser"
         />
-        <meta property="og:url" content="https://agentgpt.reworkd.ai/" />
+        <meta property="og:url" content="https://agentllm.vercel.app/" />
         <meta
           property="og:image"
-          content="https://agentgpt.reworkd.ai/banner.png"
+          content="https://user-images.githubusercontent.com/18148989/234704508-56e08243-256e-4d57-b8ef-338783854ee8.png"
         />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="640" />

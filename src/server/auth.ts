@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
   providers: providers,
   theme: {
     colorScheme: "dark",
-    logo: "https://agentgpt.reworkd.ai/logo-white.svg",
+    logo: "https://user-images.githubusercontent.com/18148989/234702228-c83aef13-9514-4cd6-9537-a72c3a0ca494.png",
   },
 };
 

@@ -54,6 +54,8 @@ export default function HelpDialog({
             <FaGithub size={30} />
           </div>
         </div>
+        <br/>
+        <p>Disclaimer: This project is a proof-of-concept utilizing experimental technologies. It is by no means a production-ready implementation, and it should not be used for anything other than research. It's provided "as-is" without any warranty, expressed or implied. By using this software, you agree to assume all risks associated with its use, including but not limited to data loss, system failure, or any other issues that may arise.</p>
       </div>
     </Dialog>
   );

@@ -26,7 +26,8 @@ export default function AboutDialog({
         </p>
         <div>
           <br />
-          For more information, read the <a href={''} target={"_blank"} rel={'noreferrer'}><u>blog post on Medium</u></a>.
+          For more information, read the <a href={''} target={"_blank"} rel={'noreferrer'}><u>blog post</u></a>.
+          <br />
           <br />
           This PoC is only the beginning. Get ready to blast off with AgentLLM and join this exciting journey 🚀
           <br />

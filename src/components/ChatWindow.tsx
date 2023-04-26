@@ -171,7 +171,7 @@ const MacWindowHeader = (props: HeaderProps) => {
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.href = dataUrl;
-        link.download = "agent-gpt-output.png";
+        link.download = "agent-llm-output.png";
         link.click();
       })
       .catch(console.error);

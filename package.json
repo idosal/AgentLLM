@@ -1,5 +1,5 @@
 {
-  "name": "agent-gpt",
+  "name": "agent-llm",
   "version": "0.1.0",
   "private": true,
   "engines": {

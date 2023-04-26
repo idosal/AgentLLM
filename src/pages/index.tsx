@@ -21,7 +21,7 @@ import useScript from "../hooks/useScript";
 import HelpDialog from "../components/HelpDialog";
 
 const Home: NextPage = () => {
-  const name = "BrowserGPT";
+  const name = "AgentLLM";
   // const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
   const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
@@ -40,6 +40,7 @@ const Home: NextPage = () => {
   const [showHelpDialog, setShowHelpDialog] = React.useState(false);
   const [hasSaved, setHasSaved] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
+  const [initProgress, setInitProgress] = React.useState(0);
   const agentUtils = useAgent();
 
   useScript("tvmjs_runtime.wasi.js");
@@ -92,7 +93,7 @@ const Home: NextPage = () => {
       goalInput.trim(),
       handleAddMessage,
       () => setAgent(null),
-      { customModelName, customTemperature, customMaxLoops },
+      { customModelName, customTemperature, customMaxLoops, setInitProgress }
     );
     setAgent(agent);
     setHasSaved(false);
@@ -117,12 +118,6 @@ const Home: NextPage = () => {
     setShouldAgentStop(true);
     agent?.stopAgent();
   };
-
-  const proTitle = (
-    <>
-      BrowserGPT<span className="ml-1 text-amber-500/90">Pro</span>
-    </>
-  );
 
   const shouldShowSave = false;
 
@@ -155,10 +150,10 @@ const Home: NextPage = () => {
             >
               <div className="flex flex-row items-start shadow-2xl">
                 <span className="text-4xl font-bold text-[#C0C0C0] xs:text-5xl sm:text-6xl">
-                  Browser
+                  Agent
                 </span>
                 <span className="text-4xl font-bold text-white xs:text-5xl sm:text-6xl">
-                  GPT
+                  LLM
                 </span>
                 <PopIn delay={0.5} className="sm:right-0 sm:top-2">
                   <Badge>PoC</Badge>
@@ -173,9 +168,10 @@ const Home: NextPage = () => {
               <ChatWindow
                 className="sm:mt-4"
                 messages={messages}
-                title={"BrowserGPT"}
+                title={"AgentLLM"}
                 showDonation={false}
                 isInitialized={isInitialized}
+                initProgress={initProgress}
                 onSave={
                   shouldShowSave
                     ? (format) => {
@@ -207,7 +203,7 @@ const Home: NextPage = () => {
               {/*    disabled={agent != null}*/}
               {/*    onChange={(e) => setName(e.target.value)}*/}
               {/*    onKeyDown={(e) => handleKeyPress(e)}*/}
-              {/*    placeholder="BrowserGPT"*/}
+              {/*    placeholder="AgentLLM"*/}
               {/*  />*/}
               {/*</Expand>*/}
               <Expand delay={1.3}>

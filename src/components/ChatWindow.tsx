@@ -31,6 +31,7 @@ interface ChatWindowProps extends HeaderProps {
   className?: string;
   showDonation: boolean;
   isInitialized?: boolean;
+  initProgress?: number;
   fullscreen?: boolean;
   scrollToBottom?: boolean;
 }
@@ -46,7 +47,8 @@ const ChatWindow = ({
   onSave,
   fullscreen,
   scrollToBottom,
-  isInitialized
+  isInitialized,
+  initProgress
 }: ChatWindowProps) => {
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -96,7 +98,7 @@ const ChatWindow = ({
       >
         {messages.map((message, index) => (
           <FadeIn key={`${index}-${message.type}`}>
-            <ChatMessage message={message} isInitialized={isInitialized} />
+            <ChatMessage message={message} isInitialized={isInitialized} initProgress={initProgress} />
           </FadeIn>
         ))}
         {children}
@@ -109,7 +111,7 @@ const ChatWindow = ({
                 message={{
                   type: "system",
                   value:
-                    "🏠 BrowserGPT runs locally on your browser, without OpenAI. It's private, and free!",
+                    "🏠 AgentLLM runs locally on your browser, without OpenAI. It's private, and free!",
                 }}
               />
               {showDonation && (
@@ -123,11 +125,11 @@ const ChatWindow = ({
                 message={{
                   type: "system",
                   value:
-                    "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try BrowserGPT in Chrome Canary on a mid-high tier desktop (see 'Help')",
+                    "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try AgentLLM in Chrome Canary on a mid-high tier desktop (see 'Help')",
                 }}
               />
             </Expand>}
-            <Expand delay={0.8} type="spring">
+            {!isUnsupported && <Expand delay={0.8} type="spring">
               <ChatMessage
                 message={{
                   type: "system",
@@ -135,7 +137,7 @@ const ChatWindow = ({
                     "> Create an agent by writing a goal and hitting deploy!",
                 }}
               />
-            </Expand>
+            </Expand>}
           </>
         )}
       </div>
@@ -264,7 +266,7 @@ const MacWindowHeader = (props: HeaderProps) => {
     </div>
   );
 };
-const ChatMessage = ({ message, isInitialized }: { message: Message, isInitialized?: boolean }) => {
+const ChatMessage = ({ message, isInitialized, initProgress }: { message: Message, isInitialized?: boolean, initProgress?: number }) => {
   const [showCopy, setShowCopy] = useState(false);
   const [copied, setCopied] = useState(false);
   const handleCopyClick = () => {
@@ -303,7 +305,7 @@ const ChatMessage = ({ message, isInitialized }: { message: Message, isInitializ
 
       {message.type == "thinking" && !isInitialized && (
         <span className="italic text-zinc-400">
-          First initialization may take up to a few minutes but future initializations will be quick (if it takes more than a few minutes, your machine or internet connection may not meet the minimum requirements)
+          Initialization ({initProgress}%) may take up to a few minutes when populating the cache but future initializations will be quick. If it takes more than a few minutes, your machine or internet connection may not meet the minimum requirements.
         </span>
       )}
 

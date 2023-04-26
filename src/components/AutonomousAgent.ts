@@ -1,12 +1,15 @@
 import axios from "axios";
-import type {ModelSettings} from "../utils/types";
+import type { ModelSettings } from "../utils/types";
 import AgentService from "../services/agent-service";
-import {DEFAULT_MAX_LOOPS_FREE, DEFAULT_MAX_LOOPS_PAID,} from "../utils/constants";
-import type {Session} from "next-auth";
-import type {Message} from "../types/agentTypes";
+import {
+  DEFAULT_MAX_LOOPS_FREE,
+  DEFAULT_MAX_LOOPS_PAID,
+} from "../utils/constants";
+import type { Session } from "next-auth";
+import type { Message } from "../types/agentTypes";
 // import { env } from "../env/client.mjs";
-import {v4} from "uuid";
-import type {RequestBody} from "../utils/interfaces";
+import { v4 } from "uuid";
+import type { RequestBody } from "../utils/interfaces";
 
 const TIMEOUT_LONG = 1000;
 const TIMOUT_SHORT = 800;
@@ -53,7 +56,6 @@ class AutonomousAgent {
         this.sendTaskMessage(task);
       }
     } catch (e) {
-      console.log(e);
       this.sendErrorMessage(getMessageFromError(e));
       this.shutdown();
       return;
@@ -235,7 +237,8 @@ class AutonomousAgent {
   sendLoopMessage() {
     this.sendMessage({
       type: "system",
-      value: "We've cut this session short as it seems the agent has lost track. If this is a mistake, please reach out via Github. Shutting down.",
+      value:
+        "We've cut this session short as it seems the agent has lost track. If this is a mistake, please reach out via Github. Shutting down.",
     });
   }
 
@@ -313,7 +316,10 @@ const getMessageFromError = (e: unknown) => {
     if (axiosError.response?.status === 404) {
       message = `ERROR your API key does not have GPT-4 access. You must first join OpenAI's wait-list. (This is different from ChatGPT Plus)`;
     }
-  } else if ((e as { message: string }).message === "This browser env do not support WebGPU") {
+  } else if (
+    (e as { message: string }).message ===
+    "This browser env do not support WebGPU"
+  ) {
     message = `❌ Error initializing the local LLM. Your browser does not support WebGPU. Please retry on Chrome Canary (see 'Help'). Shutting Down.`;
   } else {
     message = `❌ Error retrieving initial tasks array. Retry, make your goal more clear, or revise your goal such that it is within our model's policies to run. Shutting Down.`;

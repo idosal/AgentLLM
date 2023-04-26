@@ -13,7 +13,7 @@ export default function HelpDialog({
     <Dialog header="Help" isShown={show} close={close}>
       <div className="text-md relative flex-auto p-2 leading-relaxed">
         <p>Since running the model locally is very taxing, lower-tier machines may not be able to run this PoC.
-          For the best experience, try BrowserGPT on a powerful desktop device.</p>
+          For the best experience, try AgentLLM on a powerful desktop device.</p>
         <br/>
         <p>
           Getting started:
@@ -31,7 +31,7 @@ export default function HelpDialog({
           <li>For example, in MacOS, run the following command in the terminal: /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness
           </li>
           <li>
-            3. Navigate to BrowserGPT
+            3. Navigate to AgentLLM
           </li>
         </ul>
         <br />
@@ -56,7 +56,7 @@ export default function HelpDialog({
           <div
             className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
             onClick={() =>
-              window.open("https://github.com/idosal/BrowserGPT", "_blank")
+              window.open("https://github.com/idosal/AgentLLM", "_blank")
             }
           >
             <FaGithub size={30} />

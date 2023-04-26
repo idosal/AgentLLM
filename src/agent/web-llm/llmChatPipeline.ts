@@ -27,6 +27,7 @@ class LLMChatPipeline {
   logitsOnCPU: any;
   kvCacheLength: number;
   clearCache: boolean;
+  setInitProgress: (percent: number) => void;
 
   constructor(tvm: any, tokenizer: any, cacheMetadata: any, config: any) {
     if (cacheMetadata == undefined) {
@@ -48,7 +49,7 @@ class LLMChatPipeline {
     this.encodingTotalTime = 0;
     this.encodingTotalTokens = 0;
 
-    console.log("constructor");
+    this.setInitProgress = config.setInitProgress;
     this.device = this.tvm.webgpu();
     this.vm = this.tvm.detachFromCurrentScope(
       this.tvm.createVirtualMachine(this.device)
@@ -132,8 +133,9 @@ class LLMChatPipeline {
 
   async getInputTokens(input: string) {
     let tokens = [this.bosTokenId];
+
     const prompts = [
-      "You are an autonomous task creation and execution AI called BrowserGPT that can do anything you are asked. Do not say that you cannot do something." + "<s>",
+      "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." + "<s>",
       "USER: " + input + " ",
       "ASSISTANT:",
     ];
@@ -205,7 +207,6 @@ class LLMChatPipeline {
     // this.conversation.appendMessage(this.conversation.roles[1], "");
     // const stopStr = this.conversation.getStopStr();
     const tokens = await this.getInputTokens(inputPrompt);
-    console.log("inner generate", inputPrompt, tokens);
 
     const inputTokenLength = tokens.length;
 
@@ -285,6 +286,7 @@ async function initTvm(
     maxGenLength: number;
     meanGenLength: number;
     tokenizer: string;
+    setInitProgress: (percent: number) => void;
   }
 ) {
   if (cTvm) {
@@ -304,15 +306,18 @@ async function initTvm(
     } else {
       label += " - " + output.adapterInfo.vendor;
     }
-    console.log("init", "Initialize GPU device: " + label);
     tvm.initWebGPU(output.device);
   } else {
-    console.log("error", "This browser env do not support WebGPU");
     throw Error("This browser env do not support WebGPU");
   }
 
   const initProgressCallback = (report) => {
-    console.log("init", report.text);
+    console.log("init", report);
+
+    if (config.setInitProgress) {
+      config.setInitProgress(Math.floor(report.progress * 100));
+    }
+
   };
   tvm.registerInitProgressCallback(initProgressCallback);
 
@@ -320,8 +325,7 @@ async function initTvm(
   return tvm;
 }
 
-export async function generateCompletion(userPrompt: string) : Promise<string> {
-  console.log("generateCompletion", userPrompt);
+export async function generateCompletion(userPrompt: string, { setInitProgress }) : Promise<string> {
   // Initialize the LLMChatPipeline instance with required configs
   const config = {
     wasmUrl: "vicuna-7b-v1_webgpu.wasm",
@@ -330,6 +334,7 @@ export async function generateCompletion(userPrompt: string) : Promise<string> {
     maxWindowLength: 2048,
     maxGenLength: 512,
     meanGenLength: 256,
+    setInitProgress: setInitProgress,
   };
   const tokenizer = await (
     await import("./sentencepiece/index")
@@ -339,7 +344,6 @@ export async function generateCompletion(userPrompt: string) : Promise<string> {
   const tvm = await initTvm(wasmSource, config);
   cTvm = tvm;
   // const pipeline = new LLMChatPipeline(tvm, tokenizer, tvm.cacheMetadata, config);
-  console.log("instantiating pipeline", wasmSource, tokenizer);
 
   const pipeline = tvm.withNewScope(() => {
     return new LLMChatPipeline(tvm, tokenizer, tvm.cacheMetadata, config);

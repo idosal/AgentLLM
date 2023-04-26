@@ -20,7 +20,7 @@ const DefaultLayout = (props: LayoutProps) => {
       )}
     >
       <Head>
-        <title>BrowserGPT</title>
+        <title>AgentLLM</title>
         <meta name="description" content={description} />
         <meta name="twitter:site" content="@AgentGPT" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -34,7 +34,7 @@ const DefaultLayout = (props: LayoutProps) => {
         <meta name="twitter:image:height" content="640" />
         <meta
           property="og:title"
-          content="BrowserGPT: Autonomous AI in your browser"
+          content="AgentLLM: Autonomous AI in your browser"
         />
         <meta
           property="og:description"

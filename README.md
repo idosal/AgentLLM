@@ -1,5 +1,5 @@
 <p align="center">
-<a href="">🔗 Demo</a>
+<a href="https://agentllm.verce/">🔗 Demo</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
 <a href="#-getting-started">🤝 Contribute</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
@@ -11,19 +11,30 @@
 ---
 
 <h1>AgentLLM</h1>
-<p><b>AgentLLM</b> is the first proof of concept to utilize an open-source LLM to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance.
-The implementation of the embedded LLM builds on the fantastic research of WebLLM, which takes advantage of Chromium's bleeding edge introduction of WebGPU (currently available only on Canary versions) to run inference utilizing the GPU. It offers significant performance gains over the previously available CPU-based implementations.
-To create a sanitary and accessible sandbox, I chose to modify the popular AgentGPT project by replacing ChatGPT with Vicuna7B and changing the prompt mechanism. At its core, AgentGPT allows deploying autonomous agents to perform any arbitrary goal (from basic tasks to complex problem solving) by running a loop of task generation and execution. It's a perfect match for our requirements as its agents do not use tools, eliminating the complexity and unpredictability of external factors (which is present in full-blown implementations of other popular frameworks), and its GUI is friendly and feature-rich. The sandbox enables quick prototyping of the models' ability to break down tasks and plan ahead (try it!).</p>
+<b>AgentLLM</b> is the first proof of concept to utilize an open-source large language model (LLM) to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance.
+
+The implementation of the embedded LLM builds on the fantastic research of <a href="https://github.com/mlc-ai/web-llm">WebLLM</a>, which takes advantage of Chromium's bleeding edge introduction of <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">WebGPU</a> (currently available only on Canary versions) to run inference utilizing the GPU. It offers significant performance gains over the previously available CPU-based implementations.
+
+To create a sanitary and accessible sandbox, I chose to modify the popular <a href="https://github.com/reworkd/AgentGPT">AgentGPT</a> project by replacing ChatGPT with Vicuna7B and changing the prompt mechanism. At its core, AgentGPT allows deploying autonomous agents to perform any arbitrary goal (from basic tasks to complex problem solving) by running a loop of task generation and execution. It's a perfect match for our requirements as its agents do not use tools, eliminating the complexity and unpredictability of external factors (which is present in full-blown implementations of other popular frameworks), and its GUI is friendly and feature-rich. The sandbox enables quick prototyping of the models' ability to break down tasks and plan ahead (try it!).</p>
 
 <h2>Motivation</h2>
 
-<p>Recent advancements in large language models (LLMs) like OpenAI's ChatGPT and GPT-4 have led to the rise of autonomous agents that can act independently, without human intervention, to achieve specified goals. However, most notable LLMs require massive computational resources, restricting their operation to powerful remote servers. The restriction leads to a variety of issues concerning privacy, cost, and availability. This is where browser-native LLMs come in, revolutionizing the way we think about autonomous agents and their potential applications.</p>
+<p>Recent advancements in large language models (LLMs) like OpenAI's ChatGPT and GPT-4 have led to the rise of autonomous agents that can act independently, without human intervention, to achieve specified goals. However, most notable LLMs require massive computational resources, restricting their operation to powerful remote servers. Their remote operation leads to a variety of issues concerning privacy, cost, and availability. That is where browser-native LLMs come in, changing the way we think about autonomous agents and their potential applications.</p>
 
 <p align="center">
 <a href="https://github.com/sponsors/reworkd-admin">👉 Click here</a> to support AgentGPT (template of this project)
 </p>
 
-## 👨‍🚀 Getting Started
+## Getting Started
+
+### 🏃 Running the demo
+
+1. Install <a href="https://www.google.com/chrome/canary/">Chrome Canary</a> (or <a href="https://www.microsoftedgeinsider.com/en-us/download/canary">Edge Canary</a>) 🐦. Currently, they are the only browsers that supports the required WebGPU feature.
+2. Launch Chrome Canary (preferably with `--enable-dawn-features=disable_robustness`).
+   For example, in MacOS, run the following command in the terminal: `/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness`
+3. Navigate to <a href="https://agentllm.vercel.app/">AgentLLM</a>
+
+Since running the model locally is very taxing, lower-tier devices may not be able to run the demo. For the best experience, try AgentLLM on a powerful desktop device.
 
 ### 🐳 Docker Setup
 

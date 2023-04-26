@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import { LLMChatConfig } from "./llmChat";
+
 let cTvm = undefined;
 
 class LLMChatPipeline {
@@ -27,7 +29,6 @@ class LLMChatPipeline {
   logitsOnCPU: any;
   kvCacheLength: number;
   clearCache: boolean;
-  setInitProgress: (percent: number) => void;
 
   constructor(tvm: any, tokenizer: any, cacheMetadata: any, config: any) {
     if (cacheMetadata == undefined) {
@@ -49,7 +50,6 @@ class LLMChatPipeline {
     this.encodingTotalTime = 0;
     this.encodingTotalTokens = 0;
 
-    this.setInitProgress = config.setInitProgress;
     this.device = this.tvm.webgpu();
     this.vm = this.tvm.detachFromCurrentScope(
       this.tvm.createVirtualMachine(this.device)
@@ -135,7 +135,8 @@ class LLMChatPipeline {
     let tokens = [this.bosTokenId];
 
     const prompts = [
-      "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." + "<s>",
+      "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." +
+        "<s>",
       "USER: " + input + " ",
       "ASSISTANT:",
     ];
@@ -167,7 +168,12 @@ class LLMChatPipeline {
     this.clearCache = true;
     // abandon all tokens we collected
     tokens = [this.bosTokenId];
-    let all_prompts = this.conversation.getPromptArray();
+    const all_prompts = [
+      "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." +
+        "<s>",
+      "USER: " + input + " ",
+      "ASSISTANT:",
+    ];
     tokens.push(...(await this.tokenizer.encodeIds(all_prompts[0])));
     context = [];
     ctxLength = tokens.length;
@@ -312,12 +318,9 @@ async function initTvm(
   }
 
   const initProgressCallback = (report) => {
-    console.log("init", report);
-
     if (config.setInitProgress) {
       config.setInitProgress(Math.floor(report.progress * 100));
     }
-
   };
   tvm.registerInitProgressCallback(initProgressCallback);
 
@@ -325,17 +328,11 @@ async function initTvm(
   return tvm;
 }
 
-export async function generateCompletion(userPrompt: string, { setInitProgress }) : Promise<string> {
+export async function generateCompletion(
+  userPrompt: string,
+  config: LLMChatConfig
+): Promise<string> {
   // Initialize the LLMChatPipeline instance with required configs
-  const config = {
-    wasmUrl: "vicuna-7b-v1_webgpu.wasm",
-    cacheUrl: "https://huggingface.co/mlc-ai/web-lm/resolve/main/vicuna-7b-v1/",
-    tokenizer: "tokenizer.model",
-    maxWindowLength: 2048,
-    maxGenLength: 512,
-    meanGenLength: 256,
-    setInitProgress: setInitProgress,
-  };
   const tokenizer = await (
     await import("./sentencepiece/index")
   ).sentencePieceProcessor(config.tokenizer);

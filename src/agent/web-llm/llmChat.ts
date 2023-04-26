@@ -2,17 +2,19 @@ import type { BaseLLMParams } from "langchain/llms";
 import { LLM } from "langchain/llms/base";
 import { generateCompletion } from "./llmChatPipeline";
 
+export interface LLMChatConfig {
+  cacheUrl: string;
+  wasmUrl: string;
+  maxGenLength: number;
+  maxWindowLength: number;
+  meanGenLength: number;
+  kvConfig: { numLayers: number; shape: number[]; dtype: string };
+  tokenizer: string;
+  setInitProgress: (percent: number) => void;
+}
+
 export interface LLMChatInput extends BaseLLMParams {
-  config: {
-    cacheUrl: string;
-    wasmUrl: string;
-    maxGenLength: number;
-    maxWindowLength: number;
-    meanGenLength: number;
-    kvConfig: { numLayers: number; shape: number[]; dtype: string };
-    tokenizer: string;
-    setInitProgress: (percent: number) => void;
-  };
+  config: LLMChatConfig;
 }
 
 export class WebLLMChat extends LLM implements LLMChatInput {

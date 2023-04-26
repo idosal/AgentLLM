@@ -1,5 +1,5 @@
 import React from "react";
-import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 import Dialog from "./Dialog";
 
 export default function HelpDialog({
@@ -22,7 +22,7 @@ export default function HelpDialog({
           <li>
             1. Install{" "}
             <a href={"https://www.google.com/chrome/canary/"}  target={"_blank"} rel={'noreferrer'}>
-              <u>Chrome Canary</u> 🐦. Currently, it is the only browser that supports the required WebGPU feature.
+              <u>Chrome Canary</u> (or Edge Canary) 🐦. Currently, they are the only browsers that supports the required WebGPU feature.
             </a>
           </li>
           <li>
@@ -39,14 +39,6 @@ export default function HelpDialog({
           If you need further assistance, feel free to reach out via Twitter or Github:
         </p>
         <div className="mt-4 flex w-full items-center justify-center gap-5">
-          {/*<div*/}
-          {/*  className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"*/}
-          {/*  onClick={() =>*/}
-          {/*    window.open("https://discord.gg/jdSBAnmdnY", "_blank")*/}
-          {/*  }*/}
-          {/*>*/}
-          {/*  <FaDiscord size={30} />*/}
-          {/*</div>*/}
           <div
             className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
             onClick={() => window.open("https://twitter.com/idosal1", "_blank")}

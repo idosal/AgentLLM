@@ -26,19 +26,12 @@ export default function AboutDialog({
         </p>
         <div>
           <br />
+          For more information, read the <a href={''} target={"_blank"} rel={'noreferrer'}><u>blog post on Medium</u></a>.
+          <br />
           This PoC is only the beginning. Get ready to blast off with AgentLLM and join this exciting journey 🚀
           <br />
-          <p className="mt-2">Stay tuned::</p>
         </div>
         <div className="mt-4 flex w-full items-center justify-center gap-5">
-          {/*<div*/}
-          {/*  className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"*/}
-          {/*  onClick={() =>*/}
-          {/*    window.open("https://discord.gg/jdSBAnmdnY", "_blank")*/}
-          {/*  }*/}
-          {/*>*/}
-          {/*  <FaDiscord size={30} />*/}
-          {/*</div>*/}
           <div
             className="cursor-pointer rounded-full bg-black/30 p-3 hover:bg-black/70"
             onClick={() =>

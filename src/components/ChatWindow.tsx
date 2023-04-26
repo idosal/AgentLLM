@@ -25,7 +25,7 @@ import FadeIn from "./motions/FadeIn";
 import Menu from "./Menu";
 import type { Message } from "../types/agentTypes";
 import clsx from "clsx";
-import {isMobile} from "@headlessui/react/dist/utils/platform";
+import { isMobile } from 'react-device-detect';
 
 interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;

@@ -7,7 +7,6 @@
   <a href="https://agentllm.vercel.app/">![Demo](https://img.shields.io/badge/Demo-AgentLLM-green)</a>
   [![Medium Badge](https://badgen.net/badge/icon/medium?icon=medium&label)](https://medium.com/@idosalomon)
   [![Twitter Follow](https://img.shields.io/twitter/follow/idosal1?style=social)](https://twitter.com/idosal1)
-  ![License](https://img.shields.io/github/license/idosal/AgentLLM)
   
 </div>
 

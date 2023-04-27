@@ -13,7 +13,7 @@
 
 ---
 
-<b>AgentLLM</b> is the first proof of concept to utilize an open-source large language model (LLM) to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance. Learn more on [Medium](https://medium.com/@idosalomon) and feel free to check out the [demo](https://agentllm.vercel.app/).
+<b>AgentLLM</b> is the first proof of concept to utilize an open-source large language model (LLM) to develop autonomous agents that operate solely on the browser. Its main goal is to demonstrate that embedded LLMs have the ability to handle the complex goal-oriented tasks of autonomous agents with acceptable performance. Learn more on [Medium](https://medium.com/@idosalomon/agentllm-revolutionizing-autonomous-agent-applications-with-browser-native-llms-93768d0beec5?source=friends_link&sk=716c84d77108d81029e1918f19d86f4c) and feel free to check out the [demo](https://agentllm.vercel.app/).
 
 &nbsp;
   

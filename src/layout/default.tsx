@@ -15,16 +15,16 @@ const DefaultLayout = (props: LayoutProps) => {
   return (
     <div
       className={clsx(
-        "flex flex-col bg-gradient-to-b from-[#2B2B2B] to-[#1F1F1F]",
+        "flex flex-col bg-gradient-to-b from-[#1c1a1a] to-[#1F1F1F]",
         props.centered && "items-center justify-center"
       )}
     >
       <Head>
         <title>AgentLLM</title>
         <meta name="description" content={description} />
-        <meta name="twitter:site" content="@AgentGPT" />
+        <meta name="twitter:site" content="@AgentLLM" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AgentGPT 🤖" />
+        <meta name="twitter:title" content="AgentLLM" />
         <meta name="twitter:description" content={description} />
         <meta
           name="twitter:image"
@@ -38,7 +38,7 @@ const DefaultLayout = (props: LayoutProps) => {
         />
         <meta
           property="og:description"
-          content="Autonomous AI Agents native to your browser"
+          content="Autonomous AI Agents based on browser-native LLMs"
         />
         <meta property="og:url" content="https://agentllm.vercel.app/" />
         <meta

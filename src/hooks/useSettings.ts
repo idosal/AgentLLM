@@ -12,6 +12,7 @@ const DEFAULT_SETTINGS: ModelSettings = {
   customTemperature: 0.9 as const,
   customMaxLoops: DEFAULT_MAX_LOOPS_CUSTOM_API_KEY,
   maxTokens: 300 as const,
+  setInitProgress: console.log,
 };
 
 const loadSettings = () => {
@@ -33,15 +34,8 @@ const loadSettings = () => {
       }
     });
   } catch (error) {}
-
-  if (
-    DEFAULT_SETTINGS.customApiKey &&
-    DEFAULT_SETTINGS.customMaxLoops === DEFAULT_MAX_LOOPS_FREE
-  ) {
     DEFAULT_SETTINGS.customMaxLoops = DEFAULT_MAX_LOOPS_CUSTOM_API_KEY;
-  }
-
-  return DEFAULT_SETTINGS;
+    return DEFAULT_SETTINGS;
 };
 
 export function useSettings(): SettingModel {

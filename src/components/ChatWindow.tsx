@@ -1,15 +1,7 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FaBrain,
-  FaClipboard,
-  FaCopy,
-  FaImage,
-  FaListAlt,
-  FaPlayCircle,
-  FaSave,
-  FaStar,
-} from "react-icons/fa";
+import { useTranslation } from "next-i18next";
+import { FaClipboard, FaCopy, FaImage, FaSave } from "react-icons/fa";
 import PopIn from "./motions/popin";
 import Expand from "./motions/expand";
 import * as htmlToImage from "html-to-image";
@@ -24,8 +16,21 @@ import PDFButton from "./pdf/PDFButton";
 import FadeIn from "./motions/FadeIn";
 import Menu from "./Menu";
 import type { Message } from "../types/agentTypes";
+import {
+  isAction,
+  getTaskStatus,
+  MESSAGE_TYPE_GOAL,
+  MESSAGE_TYPE_THINKING,
+  MESSAGE_TYPE_SYSTEM,
+  TASK_STATUS_STARTED,
+  TASK_STATUS_EXECUTING,
+  TASK_STATUS_COMPLETED,
+  TASK_STATUS_FINAL,
+} from "../types/agentTypes";
 import clsx from "clsx";
 import { isMobile } from 'react-device-detect';
+import { getMessageContainerStyle, getTaskStatusIcon } from "./utils/helpers";
+import type { Translation } from "../utils/types";
 
 interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;
@@ -35,6 +40,7 @@ interface ChatWindowProps extends HeaderProps {
   initProgress?: number;
   fullscreen?: boolean;
   scrollToBottom?: boolean;
+  isAgentStopped?: boolean;
 }
 
 const messageListId = "chat-window-message-list";
@@ -48,9 +54,11 @@ const ChatWindow = ({
   onSave,
   fullscreen,
   scrollToBottom,
+  isAgentStopped,
   isInitialized,
   initProgress
 }: ChatWindowProps) => {
+  const [t] = useTranslation();
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isUnsupported, setIsUnsupported] = useState(false);
@@ -59,11 +67,8 @@ const ChatWindow = ({
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
 
     // Use has scrolled if we have scrolled up at all from the bottom
-    if (scrollTop < scrollHeight - clientHeight - 10) {
-      setHasUserScrolled(true);
-    } else {
-      setHasUserScrolled(false);
-    }
+    const hasUserScrolled = scrollTop < scrollHeight - clientHeight - 10;
+    setHasUserScrolled(hasUserScrolled);
   };
 
   useEffect(() => {
@@ -91,40 +96,38 @@ const ChatWindow = ({
         className={clsx(
           "mb-2 mr-2 ",
           (fullscreen && "max-h-[75vh] flex-grow overflow-auto") ||
-          "window-heights"
+            "window-heights"
         )}
         ref={scrollRef}
         onScroll={handleScroll}
         id={messageListId}
       >
-        {messages.map((message, index) => (
+        {messages.map((message, index) => {
+          if (getTaskStatus(message) === TASK_STATUS_EXECUTING) {
+          return null;
+        }
+          return (
           <FadeIn key={`${index}-${message.type}`}>
-            <ChatMessage message={message} isInitialized={isInitialized} initProgress={initProgress} />
+            <ChatMessage message={message} isInitialized={isInitialized} initProgress={initProgress} isAgentStopped={isAgentStopped} />
           </FadeIn>
-        ))}
+          );
+        })}
         {children}
 
         {messages.length === 0 && (
           <>
-
             <Expand delay={0.7} type="spring">
               <ChatMessage
                 message={{
-                  type: "system",
-                  value:
-                    "🏠 AgentLLM runs locally on your browser, without OpenAI. It's private, and free!",
+                  type: MESSAGE_TYPE_SYSTEM,
+                  value: "👉 " + t("CREATE_AN_AGENT"),
                 }}
               />
-              {showDonation && (
-                <Expand delay={0.9} type="spring">
-                  <DonationMessage />
-                </Expand>
-              )}
             </Expand>
             {isUnsupported && <Expand delay={0.8} type="spring">
               <ChatMessage
                 message={{
-                  type: "system",
+                  type: MESSAGE_TYPE_SYSTEM,
                   value:
                     "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try AgentLLM in Chrome Beta/Canary on a mid-high tier desktop (see 'Help')",
                 }}
@@ -133,7 +136,7 @@ const ChatWindow = ({
             {!isUnsupported && <Expand delay={0.8} type="spring">
               <ChatMessage
                 message={{
-                  type: "system",
+                  type: MESSAGE_TYPE_SYSTEM,
                   value:
                     "> Create an agent by writing a goal and hitting deploy!",
                 }}
@@ -153,6 +156,7 @@ interface HeaderProps {
 }
 
 const MacWindowHeader = (props: HeaderProps) => {
+  const [t] = useTranslation();
   const saveElementAsImage = (elementId: string) => {
     const element = document.getElementById(elementId);
     if (!element) {
@@ -206,21 +210,20 @@ const MacWindowHeader = (props: HeaderProps) => {
     }
   };
 
-
   const exportOptions = [
     <WindowButton
       key="Image"
       delay={0.1}
       onClick={(): void => saveElementAsImage(messageListId)}
       icon={<FaImage size={12} />}
-      name="Image"
+      name={t("Image")}
     />,
     <WindowButton
       key="Copy"
       delay={0.15}
       onClick={(): void => copyElementText(messageListId)}
       icon={<FaClipboard size={12} />}
-      name="Copy"
+      name={t("Copy")}
     />,
     <PDFButton key="PDF" name="PDF" messages={props.messages} />,
   ];
@@ -238,24 +241,25 @@ const MacWindowHeader = (props: HeaderProps) => {
       </PopIn>
       <Expand
         delay={1}
-        className="invisible flex flex-grow font-mono text-sm font-bold text-gray-600 sm:ml-2 md:visible"
+        className="invisible flex flex-grow font-mono text-sm font-bold text-gray-500 sm:ml-2 md:visible"
       >
         {props.title}
       </Expand>
       {props.onSave && (
         <WindowButton
+          ping
           key="Agent"
           delay={0}
           onClick={() => props.onSave?.("db")}
           icon={<FaSave size={12} />}
-          name={"Save"}
+          name={t("Save")}
           styleClass={{
             container: `relative bg-[#3a3a3a] md:w-20 text-center font-mono rounded-lg text-gray/50 border-[2px] border-white/30 font-bold transition-all sm:py-0.5 hover:border-[#1E88E5]/40 hover:bg-[#6b6b6b] focus-visible:outline-none focus:border-[#1E88E5]`,
           }}
         />
       )}
       <Menu
-        name="Export"
+        name={t("Export")}
         onChange={() => null}
         items={exportOptions}
         styleClass={{
@@ -267,7 +271,11 @@ const MacWindowHeader = (props: HeaderProps) => {
     </div>
   );
 };
-const ChatMessage = ({ message, isInitialized, initProgress }: { message: Message, isInitialized?: boolean, initProgress?: number }) => {
+const ChatMessage = ({ message, isAgentStopped,
+                       className, isInitialized, initProgress } : {message: Message; isInitialized?: boolean; className?: string;
+isAgentStopped?: boolean; initProgress?: number }) => {
+  const [t] = useTranslation();
+
   const [showCopy, setShowCopy] = useState(false);
   const [copied, setCopied] = useState(false);
   const handleCopyClick = () => {
@@ -289,18 +297,20 @@ const ChatMessage = ({ message, isInitialized, initProgress }: { message: Messag
 
   return (
     <div
-      className="mx-2 my-1 rounded-lg border-[2px] border-white/10 bg-white/20 p-1 font-mono text-sm hover:border-[#1E88E5]/40 sm:mx-4 sm:p-3 sm:text-base"
+      className={`${getMessageContainerStyle(
+        message
+      )} mx-2 my-1 rounded-lg border-[2px] bg-white/20 p-1 font-mono text-sm hover:border-[#1E88E5]/40 sm:mx-4 sm:p-3 sm:text-base`}
       onMouseEnter={() => setShowCopy(true)}
       onMouseLeave={() => setShowCopy(false)}
       onClick={handleCopyClick}
     >
-      {message.type != "system" && (
+      {message.type != MESSAGE_TYPE_SYSTEM && (
         // Avoid for system messages as they do not have an icon and will cause a weird space
         <>
           <div className="mr-2 inline-block h-[0.9em]">
-            {getMessageIcon(message)}
+            {getTaskStatusIcon(message, { isAgentStopped })}
           </div>
-          <span className="mr-2 font-bold">{getMessagePrefix(message)}</span>
+          <span className="mr-2 font-bold">{getMessagePrefix(message, t)}</span>
         </>
       )}
 
@@ -310,28 +320,36 @@ const ChatMessage = ({ message, isInitialized, initProgress }: { message: Messag
         </span>
       )}
 
-      {message.type == "action" ? (
+      {isAction(message) ? (
         <div className="prose ml-2 max-w-none">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}
           >
-            {message.value}
+            {message.info || ""}
           </ReactMarkdown>
         </div>
       ) : (
-        <span>{message.value}</span>
+        <>
+          <span>{message.value}</span>
+          {
+            // Link to the FAQ if it is a shutdown message
+            message.type == MESSAGE_TYPE_SYSTEM &&
+              message.value.toLowerCase().includes("shut") && <FAQ />
+          }
+        </>
       )}
 
       <div className="relative">
         {copied ? (
           <span className="absolute bottom-0 right-0 rounded-full border-2 border-white/30 bg-zinc-800 p-1 px-2 text-gray-300">
-            Copied!
+            {t("Copied!")}
           </span>
         ) : (
           <span
-            className={`absolute bottom-0 right-0 rounded-full border-2 border-white/30 bg-zinc-800 p-1 px-2 ${showCopy ? "visible" : "hidden"
-              }`}
+            className={`absolute bottom-0 right-0 rounded-full border-2 border-white/30 bg-zinc-800 p-1 px-2 ${
+              showCopy ? "visible" : "hidden"
+            }`}
           >
             <FaCopy className="text-white-300 cursor-pointer" />
           </span>
@@ -343,13 +361,14 @@ const ChatMessage = ({ message, isInitialized, initProgress }: { message: Messag
 
 const DonationMessage = () => {
   const router = useRouter();
+  const [t] = useTranslation();
 
   return (
     <div className="mx-2 my-1 flex flex-col gap-2 rounded-lg border-[2px] border-white/10 bg-blue-500/20 p-1 text-center font-mono hover:border-[#1E88E5]/40 sm:mx-4 sm:p-3 sm:text-base md:flex-row">
       <div className="max-w-none flex-grow">
-        💝️ Help support the advancement of AgentGPT. 💝
+        {`💝️ ${t("HELP_SUPPORT_THE_ADVANCEMENT_OF_AGENTGPT")} 💝️`}
         <br />
-        Please consider sponsoring the project on GitHub.
+        {t("Please consider sponsoring the project on GitHub.")}
       </div>
       <div className="flex items-center justify-center">
         <Button
@@ -358,38 +377,41 @@ const DonationMessage = () => {
             void router.push("https://github.com/sponsors/reworkd-admin")
           }
         >
-          Support now 🚀
+          {`${t("SUPPORT_NOW")} 🚀`}
         </Button>
       </div>
     </div>
   );
 };
 
-const getMessageIcon = (message: Message) => {
-  switch (message.type) {
-    case "goal":
-      return <FaStar className="text-yellow-300" />;
-    case "task":
-      return <FaListAlt className="text-gray-300" />;
-    case "thinking":
-      return <FaBrain className="mt-[0.1em] text-pink-400" />;
-    case "action":
-      return <FaPlayCircle className="text-green-500" />;
+const getMessagePrefix = (message: Message, t: Translation) => {
+  if (message.type === MESSAGE_TYPE_GOAL) {
+    return t("Embarking on a new goal:");
+  } else if (message.type === MESSAGE_TYPE_THINKING) {
+    return t("Thinking...");
+  } else if (getTaskStatus(message) === TASK_STATUS_STARTED) {
+    return t("Added task:");
+  } else if (getTaskStatus(message) === TASK_STATUS_COMPLETED) {
+    return `Completing: ${message.value}`;
+  } else if (getTaskStatus(message) === TASK_STATUS_FINAL) {
+    return t("No more subtasks for:");
   }
+  return "";
 };
 
-const getMessagePrefix = (message: Message) => {
-  switch (message.type) {
-    case "goal":
-      return "Embarking on a new goal:";
-    case "task":
-      return "Added task:";
-    case "thinking":
-      return "Thinking...";
-    case "action":
-      return message.info ? message.info : "Executing:";
-  }
+const FAQ = () => {
+  return (
+    <p>
+      <br />
+      If you are facing any issues, please visit our{" "}
+      <a
+        href="https://reworkd.github.io/AgentGPT-Documentation/docs/faq"
+        className="text-sky-500"
+      >
+        FAQ
+      </a>
+    </p>
+  );
 };
-
 export default ChatWindow;
 export { ChatMessage };

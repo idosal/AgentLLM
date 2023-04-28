@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useTranslation } from "next-i18next";
 import { type NextPage } from "next";
 import Badge from "../components/Badge";
 import DefaultLayout from "../layout/default";
@@ -13,31 +14,35 @@ import AutonomousAgent from "../components/AutonomousAgent";
 import Expand from "../components/motions/expand";
 import AboutDialog from "../components/AboutDialog";
 import { GPT_35_TURBO, DEFAULT_MAX_LOOPS_FREE } from "../utils/constants";
+import { SettingsDialog } from "../components/SettingsDialog";
 import { TaskWindow } from "../components/TaskWindow";
 import type { Message } from "../types/agentTypes";
 import { useAgent } from "../hooks/useAgent";
 import { isEmptyOrBlank } from "../utils/whitespace";
 import useScript from "../hooks/useScript";
 import HelpDialog from "../components/HelpDialog";
+import { useMessageStore, resetAllSlices } from "../components/store";
+import { isTask } from "../types/agentTypes";
+import { useSettings } from "../hooks/useSettings";
 
 const Home: NextPage = () => {
   const name = "AgentLLM";
   // const [name, setName] = React.useState<string>("");
+  const [t] = useTranslation();
+  // zustand states
+  const messages = useMessageStore.use.messages();
+  const tasks = useMessageStore.use.tasks();
+  const addMessage = useMessageStore.use.addMessage();
+  const updateTaskStatus = useMessageStore.use.updateTaskStatus();
+
+  // const { session, status } = useAuth();
+  // const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
   const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
-  // const [customApiKey, setCustomApiKey] = React.useState<string>("");
-  const [customModelName, setCustomModelName] =
-    React.useState<string>(GPT_35_TURBO);
-  const [customTemperature, setCustomTemperature] = React.useState<number>(0.9);
-  const [customMaxLoops, setCustomMaxLoops] = React.useState<number>(
-    DEFAULT_MAX_LOOPS_FREE
-  );
+  const settingsModel = useSettings();
   const [shouldAgentStop, setShouldAgentStop] = React.useState(false);
-
-  const [messages, setMessages] = React.useState<Message[]>([]);
-
-  const [showAboutDialog, setShowAboutDialog] = React.useState(false);
   const [showHelpDialog, setShowHelpDialog] = React.useState(false);
+  const [showAboutDialog, setShowAboutDialog] = React.useState(false);
   const [hasSaved, setHasSaved] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [initProgress, setInitProgress] = React.useState(0);
@@ -47,15 +52,14 @@ const Home: NextPage = () => {
   useScript("tvmjs.bundle.js");
 
   useEffect(() => {
-    const key = "agentgpt-modal-opened-new";
+    const key = "agentllm-modal-opened-v0.2";
     const savedModalData = localStorage.getItem(key);
 
-    // Momentarily always run
     setTimeout(() => {
       if (savedModalData == null) {
         setShowAboutDialog(true);
       }
-    }, 3000);
+    }, 1800);
 
     localStorage.setItem(key, JSON.stringify(true));
   }, []);
@@ -78,13 +82,17 @@ const Home: NextPage = () => {
       }
     }
 
-    setMessages((prev) => [...prev, message]);
-  };
+    if (isTask(message)) {
+      updateTaskStatus(message);
+    }
 
-  const tasks = messages.filter((message) => message.type === "task");
+    addMessage(message);
+  };
 
   const disableDeployAgent =
     agent != null || isEmptyOrBlank(name) || isEmptyOrBlank(goalInput);
+
+  const isAgentStopped = () => !agent?.isRunning || agent === null;
 
   const handleNewGoal = () => {
     const agent = new AutonomousAgent(
@@ -92,11 +100,12 @@ const Home: NextPage = () => {
       goalInput.trim(),
       handleAddMessage,
       () => setAgent(null),
-      { customModelName, customTemperature, customMaxLoops, setInitProgress }
+      settingsModel.settings,
+      session ?? undefined
     );
     setAgent(agent);
     setHasSaved(false);
-    setMessages([]);
+    resetAllSlices();
     agent.run().then(console.log).catch(console.error);
   };
 
@@ -118,7 +127,17 @@ const Home: NextPage = () => {
     agent?.stopAgent();
   };
 
-  const shouldShowSave = false;
+  // const proTitle = (
+  //   <>
+  //     AgentGPT<span className="ml-1 text-amber-500/90">Pro</span>
+  //   </>
+  // );
+  //
+  // const shouldShowSave =
+  //   status === "authenticated" &&
+  //   !agent?.isRunning &&
+  //   messages.length &&
+  //   !hasSaved;
 
   return (
     <DefaultLayout>
@@ -130,10 +149,16 @@ const Home: NextPage = () => {
         show={showHelpDialog}
         close={() => setShowHelpDialog(false)}
       />
+      {/*<SettingsDialog*/}
+      {/*  customSettings={settingsModel}*/}
+      {/*  show={showSettingsDialog}*/}
+      {/*  close={() => setShowSettingsDialog(false)}*/}
+      {/*/>*/}
       <main className="flex min-h-screen flex-row">
         <Drawer
           showAbout={() => setShowAboutDialog(true)}
           showHelp={() => setShowHelpDialog(true)}
+          // showSettings={() => setShowSettingsDialog(true)}
         />
         <div
           id="content"
@@ -160,7 +185,7 @@ const Home: NextPage = () => {
                 </PopIn>
               </div>
               <div className="mt-1 text-center font-mono text-[0.7em] font-bold text-white">
-                <p>Autonomous AI Agents native to your browser</p>
+                <p>Autonomous browser-native AI Agents</p>
               </div>
             </div>
 
@@ -173,20 +198,14 @@ const Home: NextPage = () => {
                 isInitialized={isInitialized}
                 initProgress={initProgress}
                 onSave={
-                  shouldShowSave
-                    ? (format) => {
-                        setHasSaved(true);
-                        // agentUtils.saveAgent({
-                        //   goal: goalInput.trim(),
-                        //   name: name.trim(),
-                        //   tasks: messages,
-                        // });
-                      }
-                    : undefined
+                  undefined
                 }
                 scrollToBottom
+                isAgentStopped={isAgentStopped()}
               />
-              {tasks.length > 0 && <TaskWindow tasks={tasks} />}
+              {tasks.length > 0 && (
+                <TaskWindow isAgentStopped={isAgentStopped()} />
+              )}
             </Expand>
 
             <div className="flex w-full flex-col gap-2 sm:mt-4 md:mt-10">
@@ -211,7 +230,7 @@ const Home: NextPage = () => {
                   left={
                     <>
                       <FaStar />
-                      <span className="ml-2">Goal:</span>
+                      <span className="ml-2">{t("AGENT_GOAL")}</span>
                     </>
                   }
                   disabled={agent != null}
@@ -223,35 +242,29 @@ const Home: NextPage = () => {
                 />
               </Expand>
             </div>
-
             <Expand delay={1.4} className="flex gap-2">
-              <Button
-                disabled={disableDeployAgent}
-                onClick={handleNewGoal}
-                className="sm:mt-10"
-              >
+              <Button disabled={disableDeployAgent} onClick={handleNewGoal}>
                 {agent == null ? (
-                  "Deploy Agent"
+                  t("Deploy Agent")
                 ) : (
                   <>
                     <VscLoading className="animate-spin" size={20} />
-                    <span className="ml-2">Running</span>
+                    <span className="ml-2">{t("Running")}</span>
                   </>
                 )}
               </Button>
               <Button
                 disabled={agent == null}
                 onClick={handleStopAgent}
-                className="sm:mt-10"
                 enabledClassName={"bg-red-600 hover:bg-red-400"}
               >
                 {shouldAgentStop ? (
                   <>
                     <VscLoading className="animate-spin" size={20} />
-                    <span className="ml-2">Stopping</span>
+                    <span className="ml-2">{t("Stopping")}</span>
                   </>
                 ) : (
-                  "Stop agent"
+                  t("Stop Agent")
                 )}
               </Button>
             </Expand>
@@ -263,3 +276,4 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+

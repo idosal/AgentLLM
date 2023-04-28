@@ -60,6 +60,14 @@ A convenient setup script is provided to help you get started.
 ./setup.sh --docker
 ```
 
+### Docker-compose
+
+Using `docker-compose` deploy
+
+```bash
+./setup.sh --docker-compose
+```
+
 ### 👷 Local Development Setup
 
 If you wish to develop AgentLLM locally, the easiest way is to

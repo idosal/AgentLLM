@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "next-i18next";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import Dialog from "./Dialog";
 
@@ -9,6 +11,7 @@ export default function HelpDialog({
   show: boolean;
   close: () => void;
 }) {
+  const [t] = useTranslation();
   return (
     <Dialog header="Help" isShown={show} close={close}>
       <div className="text-md relative flex-auto p-2 leading-relaxed">

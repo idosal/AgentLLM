@@ -229,7 +229,7 @@ const Home: NextPage = () => {
                   left={
                     <>
                       <FaStar />
-                      <span className="ml-2">{t("AGENT_GOAL")}</span>
+                      <span className="ml-2">Goal</span>
                     </>
                   }
                   disabled={agent != null}

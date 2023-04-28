@@ -24,7 +24,7 @@ export default function HelpDialog({
             <a href={"https://www.google.com/chrome/beta/"}  target={"_blank"} rel={'noreferrer'}>
               <u>Chrome Beta</u></a> or{" "}
             <a href={"https://www.google.com/chrome/canary/"}  target={"_blank"} rel={'noreferrer'}>
-              <u>Chrome Canary</u> 🐦 (or equivalent Edge channels).
+              <u>Chrome Canary</u> 🐦 (or equivalent Edge channels).{" "}
             </a>
             Currently, they are the only browsers that supports the required WebGPU feature.
           </li>

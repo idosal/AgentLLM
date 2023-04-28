@@ -311,7 +311,7 @@ isAgentStopped?: boolean; initProgress?: number }) => {
         </>
       )}
 
-      {message.type == "thinking" && !isInitialized && (
+      {message.type ==  MESSAGE_TYPE_THINKING && !isInitialized && (
         <span className="italic text-zinc-400">
           Initialization ({initProgress}%) may take a few minutes when populating the cache but future initializations will be quick. If no progress is shown for a few minutes, it could indicate that your device or internet connection may not meet the minimum requirements (see `Help`)
         </span>

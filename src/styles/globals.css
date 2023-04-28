@@ -28,7 +28,7 @@
 
 /* Used for code / table formatting within messages */
 pre {
-  @apply overflow-auto rounded-lg;
+  @apply overflow-auto whitespace-pre-wrap rounded-lg;
 }
 
 .window-heights {

@@ -4,7 +4,8 @@ import {
   FaBars,
   FaCog,
   FaDiscord,
-  FaGithub, FaInfo,
+  FaGithub,
+  FaInfo,
   FaQuestionCircle,
   FaRobot,
   FaRocket,
@@ -97,16 +98,20 @@ const Drawer = ({
           "fixed top-0 "
         )}
       >
-        {/*<div className="flex flex-col gap-1 overflow-hidden">*/}
-        {/*  <div className="mb-2 flex justify-center gap-2">*/}
+        <div className="flex flex-col gap-1 overflow-hidden">
+          <div className="mb-2 flex justify-center gap-2">
         {/*    My Agent(s)*/}
-        {/*    <button*/}
-        {/*      className="z-40 rounded-md border-2 border-white/20 bg-zinc-900 p-2 text-white hover:bg-zinc-700 md:hidden"*/}
-        {/*      onClick={toggleDrawer}*/}
-        {/*    >*/}
-        {/*      <FaBars />*/}
-        {/*    </button>*/}
-        {/*  </div>*/}
+            <button
+              className={clsx(
+                showDrawer ? "-translate-x-2" : "translate-x-12",
+                "absolute right-0 top-2 z-40 rounded-md border-2 border-white/20 bg-zinc-900 p-2  text-white transition-all hover:bg-zinc-700 "
+              )}
+              onClick={toggleDrawer}
+            >
+              <FaBars />
+            </button>
+          </div>
+        {/*</div>*/}
         {/*  <ul className="flex flex-col gap-2 overflow-auto">*/}
         {/*    {userAgents.map((agent, index) => (*/}
         {/*      <DrawerItem*/}
@@ -130,9 +135,9 @@ const Drawer = ({
         {/*      </div>*/}
         {/*    )}*/}
         {/*  </ul>*/}
-        {/*</div>*/}
+        </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 flex-auto">
           <hr className="my-2 border-gray-600/10" />
           {/*{env.NEXT_PUBLIC_FF_SUB_ENABLED ||*/}
           {/*  (router.query.pro && (*/}

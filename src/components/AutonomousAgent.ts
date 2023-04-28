@@ -2,10 +2,10 @@ import axios from "axios";
 import type { ModelSettings } from "../utils/types";
 import AgentService from "../services/agent-service";
 import {
-  DEFAULT_MAX_LOOPS_FREE,
+  // DEFAULT_MAX_LOOPS_FREE,
   DEFAULT_MAX_LOOPS_PAID,
 } from "../utils/constants";
-import { env } from "../env/client.mjs";
+// import { env } from "../env/client.mjs";
 import { v4, v1 } from "uuid";
 import type { RequestBody } from "../utils/interfaces";
 import {
@@ -33,7 +33,6 @@ class AutonomousAgent {
   renderMessage: (message: Message) => void;
   shutdown: () => void;
   numLoops = 0;
-  session?: Session;
   _id: string;
 
   constructor(
@@ -41,15 +40,13 @@ class AutonomousAgent {
     goal: string,
     renderMessage: (message: Message) => void,
     shutdown: () => void,
-    modelSettings: ModelSettings,
-    session?: Session
+    modelSettings: ModelSettings
   ) {
     this.name = name;
     this.goal = goal;
     this.renderMessage = renderMessage;
     this.shutdown = shutdown;
     this.modelSettings = modelSettings;
-    this.session = session;
     this._id = v4();
   }
 
@@ -156,9 +153,7 @@ class AutonomousAgent {
   }
 
   private maxLoops() {
-    return !!this.session?.user.subscriptionId
-      ? DEFAULT_MAX_LOOPS_PAID
-      : DEFAULT_MAX_LOOPS_FREE;
+    return DEFAULT_MAX_LOOPS_PAID;
   }
 
   async getInitialTasks(): Promise<string[]> {
@@ -265,7 +260,8 @@ class AutonomousAgent {
   sendLoopMessage() {
     this.sendMessage({
       type: MESSAGE_TYPE_SYSTEM,
-      value: "We've cut this session short as it seems the agent has lost track. If this is a mistake, please reach out via Github. Shutting down.",
+      value:
+        "We've cut this session short as it seems the agent has lost track. If this is a mistake, please reach out via Github. Shutting down.",
     });
   }
 
@@ -309,7 +305,9 @@ const getMessageFromError = (e: unknown) => {
   ) {
     message = `❌ Error initializing the local LLM. Your browser does not support WebGPU. Please retry on Chrome Beta/Canary (see 'Help'). Shutting Down.`;
   } else {
-    message = `❌ Error retrieving initial tasks array. Refresh and retry, clarify your goal, or revise your goal such that it is allowed by our model's policies. Error message: ${(e as { message: string }).message}`;
+    message = `❌ Error retrieving initial tasks array. Refresh and retry, clarify your goal, or revise your goal such that it is allowed by our model's policies. Error message: ${
+      (e as { message: string }).message
+    }`;
   }
   return message;
 };

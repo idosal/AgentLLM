@@ -9,8 +9,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
-import Button from "./Button";
-import { useRouter } from "next/router";
 import WindowButton from "./WindowButton";
 import PDFButton from "./pdf/PDFButton";
 import FadeIn from "./motions/FadeIn";
@@ -50,7 +48,7 @@ const ChatWindow = ({
   children,
   className,
   title,
-  showDonation,
+  // showDonation,
   onSave,
   fullscreen,
   scrollToBottom,
@@ -58,7 +56,7 @@ const ChatWindow = ({
   isInitialized,
   initProgress
 }: ChatWindowProps) => {
-  const [t] = useTranslation();
+  // const [t] = useTranslation();
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isUnsupported, setIsUnsupported] = useState(false);
@@ -120,8 +118,7 @@ const ChatWindow = ({
               <ChatMessage
                 message={{
                   type: MESSAGE_TYPE_SYSTEM,
-                  value: "👉 " + t("CREATE_AN_AGENT"),
-                }}
+                  value: "🏠 AgentLLM runs locally on your browser without OpenAI. It's private and free!",                }}
               />
             </Expand>
             {isUnsupported && <Expand delay={0.8} type="spring">
@@ -138,7 +135,7 @@ const ChatWindow = ({
                 message={{
                   type: MESSAGE_TYPE_SYSTEM,
                   value:
-                    "> Create an agent by writing a goal and hitting deploy!",
+                    "👉 Create an agent by writing a goal and hitting deploy!",
                 }}
               />
             </Expand>}
@@ -358,31 +355,31 @@ isAgentStopped?: boolean; initProgress?: number }) => {
     </div>
   );
 };
-
-const DonationMessage = () => {
-  const router = useRouter();
-  const [t] = useTranslation();
-
-  return (
-    <div className="mx-2 my-1 flex flex-col gap-2 rounded-lg border-[2px] border-white/10 bg-blue-500/20 p-1 text-center font-mono hover:border-[#1E88E5]/40 sm:mx-4 sm:p-3 sm:text-base md:flex-row">
-      <div className="max-w-none flex-grow">
-        {`💝️ ${t("HELP_SUPPORT_THE_ADVANCEMENT_OF_AGENTGPT")} 💝️`}
-        <br />
-        {t("Please consider sponsoring the project on GitHub.")}
-      </div>
-      <div className="flex items-center justify-center">
-        <Button
-          className="sm:text m-0 rounded-full text-sm "
-          onClick={() =>
-            void router.push("https://github.com/sponsors/reworkd-admin")
-          }
-        >
-          {`${t("SUPPORT_NOW")} 🚀`}
-        </Button>
-      </div>
-    </div>
-  );
-};
+//
+// const DonationMessage = () => {
+//   const router = useRouter();
+//   const [t] = useTranslation();
+//
+//   return (
+//     <div className="mx-2 my-1 flex flex-col gap-2 rounded-lg border-[2px] border-white/10 bg-blue-500/20 p-1 text-center font-mono hover:border-[#1E88E5]/40 sm:mx-4 sm:p-3 sm:text-base md:flex-row">
+//       <div className="max-w-none flex-grow">
+//         {`💝️ ${t("HELP_SUPPORT_THE_ADVANCEMENT_OF_AGENTGPT")} 💝️`}
+//         <br />
+//         {t("Please consider sponsoring the project on GitHub.")}
+//       </div>
+//       <div className="flex items-center justify-center">
+//         <Button
+//           className="sm:text m-0 rounded-full text-sm "
+//           onClick={() =>
+//             void router.push("https://github.com/sponsors/reworkd-admin")
+//           }
+//         >
+//           {`${t("SUPPORT_NOW")} 🚀`}
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
 
 const getMessagePrefix = (message: Message, t: Translation) => {
   if (message.type === MESSAGE_TYPE_GOAL) {
@@ -402,13 +399,12 @@ const getMessagePrefix = (message: Message, t: Translation) => {
 const FAQ = () => {
   return (
     <p>
-      <br />
-      If you are facing any issues, please visit our{" "}
+      If you are facing any issues, please check out the Help page or {" "}
       <a
-        href="https://reworkd.github.io/AgentGPT-Documentation/docs/faq"
+        href="https://github.com/idosal/AgentLLM"
         className="text-sky-500"
       >
-        FAQ
+        Github
       </a>
     </p>
   );

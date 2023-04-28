@@ -5,7 +5,7 @@ export type ModelSettings = {
   customModelName?: string;
   customTemperature?: number;
   customMaxLoops?: number;
-  setInitProgress?: (percent: number) => void;
+  setInitProgress: (percent: number) => void;
   maxTokens?: number;
 };
 

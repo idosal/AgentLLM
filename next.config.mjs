@@ -1,4 +1,3 @@
-// import { withSentryConfig } from "@sentry/nextjs";
 // @ts-check
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -6,7 +5,7 @@
  */
 // !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
-import nextI18NextConfig from './next-i18next.config.js'
+// import nextI18NextConfig from './next-i18next.config.js'
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -18,7 +17,7 @@ const config = {
     defaultLocale: "en",
   },
   webpack: function (config, _) {
-    config.experiments = { asyncWebAssembly: true, layers: true };
+    config.experiments = { asyncWebAssembly: true, syncWebAssembly: true, layers: true, topLevelAwait: true };
     return config;
   }
 };
@@ -47,3 +46,5 @@ const config = {
 //   disableLogger: true,
 //   environment: process.env.NEXT_PUBLIC_VERCEL_ENV,
 // });
+
+export default config;

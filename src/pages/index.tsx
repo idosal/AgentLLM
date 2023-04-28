@@ -13,8 +13,8 @@ import { VscLoading } from "react-icons/vsc";
 import AutonomousAgent from "../components/AutonomousAgent";
 import Expand from "../components/motions/expand";
 import AboutDialog from "../components/AboutDialog";
-import { GPT_35_TURBO, DEFAULT_MAX_LOOPS_FREE } from "../utils/constants";
-import { SettingsDialog } from "../components/SettingsDialog";
+// import { GPT_35_TURBO, DEFAULT_MAX_LOOPS_FREE } from "../utils/constants";
+// import { SettingsDialog } from "../components/SettingsDialog";
 import { TaskWindow } from "../components/TaskWindow";
 import type { Message } from "../types/agentTypes";
 import { useAgent } from "../hooks/useAgent";
@@ -23,7 +23,7 @@ import useScript from "../hooks/useScript";
 import HelpDialog from "../components/HelpDialog";
 import { useMessageStore, resetAllSlices } from "../components/store";
 import { isTask } from "../types/agentTypes";
-import { useSettings } from "../hooks/useSettings";
+// import { useSettings } from "../hooks/useSettings";
 
 const Home: NextPage = () => {
   const name = "AgentLLM";
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   // const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
   const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
-  const settingsModel = useSettings();
+  // const settingsModel = useSettings();
   const [shouldAgentStop, setShouldAgentStop] = React.useState(false);
   const [showHelpDialog, setShowHelpDialog] = React.useState(false);
   const [showAboutDialog, setShowAboutDialog] = React.useState(false);
@@ -100,8 +100,7 @@ const Home: NextPage = () => {
       goalInput.trim(),
       handleAddMessage,
       () => setAgent(null),
-      settingsModel.settings,
-      session ?? undefined
+      { setInitProgress }
     );
     setAgent(agent);
     setHasSaved(false);

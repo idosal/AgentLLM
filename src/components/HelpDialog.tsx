@@ -13,7 +13,7 @@ export default function HelpDialog({
     <Dialog header="Help" isShown={show} close={close}>
       <div className="text-md relative flex-auto p-2 leading-relaxed">
         <p>Since running the model locally is very taxing, lower-tier devices may not be able to run this PoC.
-          For the best experience, try AgentLLM on a powerful desktop device.</p>
+          For the best experience, try running AgentLLM on a powerful desktop device (with at least 6.5GB of GPU memory).</p>
         <br/>
         <p>
           Getting started:

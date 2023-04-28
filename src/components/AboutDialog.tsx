@@ -1,5 +1,5 @@
 import React from "react";
-import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 import Dialog from "./Dialog";
 
 export default function AboutDialog({
@@ -19,7 +19,7 @@ export default function AboutDialog({
         </p>
         <br />
         <p>
-          Built on top of AgentGPT, it replaces OpenAI models with Vicuna, allowing it to run
+          Built on top of AgentGPT, it replaces OpenAI models with Vicuna utilizing the research by Web-LLM, allowing it to run
           solely on your browser.
           You can use AgentLLM to configure and deploy Autonomous AI agents to achieve any goal, without sending data to remote servers.
           It will attempt to reach the goal by thinking of tasks to do, executing them, and learning from the results.

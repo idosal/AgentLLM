@@ -322,7 +322,7 @@ const getMessageFromError = (e: unknown) => {
   ) {
     message = `❌ Error initializing the local LLM. Your browser does not support WebGPU. Please retry on Chrome Canary (see 'Help'). Shutting Down.`;
   } else {
-    message = `❌ Error retrieving initial tasks array. Retry, make your goal more clear, or revise your goal such that it is within our model's policies to run. Shutting Down.`;
+    message = `❌ Error retrieving initial tasks array. Refresh and retry, clarify your goal, or revise your goal such that it is allowed by our model's policies. Error message: ${(e as { message: string }).message}`;
   }
   return message;
 };

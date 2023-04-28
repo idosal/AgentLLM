@@ -72,7 +72,6 @@ const Home: NextPage = () => {
   }, [agent]);
 
   const handleAddMessage = (message: Message) => {
-    console.log("handleAddMessage", message);
     if (!isInitialized) {
       if (message.type === "action" || message.type === 'task') {
         setIsInitialized(true);

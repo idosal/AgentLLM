@@ -21,14 +21,17 @@ export default function HelpDialog({
         <ul>
           <li>
             1. Install{" "}
+            <a href={"https://www.google.com/chrome/beta/"}  target={"_blank"} rel={'noreferrer'}>
+              <u>Chrome Beta</u></a> or{" "}
             <a href={"https://www.google.com/chrome/canary/"}  target={"_blank"} rel={'noreferrer'}>
-              <u>Chrome Canary</u> (or Edge Canary) 🐦. Currently, they are the only browsers that supports the required WebGPU feature.
+              <u>Chrome Canary</u> 🐦 (or equivalent Edge channels).
             </a>
+            Currently, they are the only browsers that supports the required WebGPU feature.
           </li>
           <li>
-            2. Launch Chrome Canary (preferably with --enable-dawn-features=disable_robustness).
+            2. Launch Chrome Beta/Canary (preferably with --enable-dawn-features=disable_robustness).
           </li>
-          <li>For example, in MacOS, run the following command in the terminal: /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness
+          <li>For example, in MacOS with Canary, run the following command in the terminal: /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness
           </li>
           <li>
             3. Navigate to AgentLLM

@@ -4,9 +4,9 @@
 
 <div align="center">
 
-  <a href="https://agentllm.vercel.app/">![Demo](https://img.shields.io/badge/Demo-AgentLLM-green)</a>
-  [![Medium Badge](https://badgen.net/badge/icon/medium?icon=medium&label)](https://medium.com/@idosalomon)
-  [![Twitter Follow](https://img.shields.io/twitter/follow/idosal1?style=social)](https://twitter.com/idosal1)
+<a href="https://agentllm.vercel.app/">![Demo](https://img.shields.io/badge/Demo-AgentLLM-green)</a>
+[![Medium Badge](https://badgen.net/badge/icon/medium?icon=medium&label)](https://medium.com/@idosalomon)
+[![Twitter Follow](https://img.shields.io/twitter/follow/idosal1?style=social)](https://twitter.com/idosal1)
 
 </div>
 
@@ -22,9 +22,10 @@
   </p>
  &nbsp;
 
-The implementation of the embedded LLM builds on the fantastic research of <a href="https://github.com/mlc-ai/web-llm">WebLLM</a>, which takes advantage of Chromium's bleeding edge introduction of <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">WebGPU</a> (currently available only on Canary versions) to run inference utilizing the GPU. It offers significant performance gains over the previously available CPU-based implementations.
+The implementation of the embedded LLM builds on the fantastic research of <a href="https://github.com/mlc-ai/web-llm">WebLLM</a>, which takes advantage of Chromium's bleeding edge introduction of <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API">WebGPU</a> (currently available only on Beta and Canary channels) to run inference utilizing the GPU. It offers significant performance gains over the previously available CPU-based implementations.
 
 To create a sanitary and accessible sandbox, I chose to modify the popular <a href="https://github.com/reworkd/AgentGPT">AgentGPT</a> project by replacing ChatGPT with Vicuna7B and changing the prompt mechanism. At its core, AgentGPT allows deploying autonomous agents to perform any arbitrary goal (from basic tasks to complex problem solving) by running a loop of task generation and execution. It's a perfect match for our requirements as its agents do not use tools, eliminating the complexity and unpredictability of external factors (which is present in full-blown implementations of other popular frameworks), and its GUI is friendly and feature-rich. The sandbox enables quick prototyping of the models' ability to break down tasks and plan ahead (feel free to <a href="https://agentllm.vercel.app/">try it!</a>).</p>
+
 <p>
 Consider supporting AgentGPT (the template for this project) by <a href="https://github.com/sponsors/reworkd-admin">clicking here</a>.
 </p>
@@ -33,20 +34,19 @@ Consider supporting AgentGPT (the template for this project) by <a href="https:/
 
 <p>Recent advancements in large language models (LLMs) like OpenAI's ChatGPT and GPT-4 have led to the rise of autonomous agents that can act independently, without human intervention, to achieve specified goals. However, most notable LLMs require massive computational resources, restricting their operation to powerful remote servers. Their remote operation leads to a variety of issues concerning privacy, cost, and availability. Enter browser-native LLMs come in, changing the way we think about autonomous agents and their potential applications.</p>
 
-----
+---
 
 <b>Disclaimer</b>
 
 This project is a proof-of-concept utilizing experimental technologies. It is by no means a production-ready implementation, and it should not be used for anything other than research. It's provided "as-is" without any warranty, expressed or implied. By using this software, you agree to assume all risks associated with its use, including but not limited to data loss, system failure, or any other issues that may arise.
 
-
 ## ➡️ Getting Started
 
 ### 🏃 Running the demo
 
-1. Install <a href="https://www.google.com/chrome/canary/">Chrome Canary</a> (or <a href="https://www.microsoftedgeinsider.com/en-us/download/canary">Edge Canary</a>) 🐦. Currently, they are the only browsers that supports the required WebGPU feature.
-2. Launch Chrome Canary (preferably with `--enable-dawn-features=disable_robustness`).
-   For example, in MacOS, run the following command in the terminal: `/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness`
+1. Install <a href="https://www.google.com/chrome/beta/">Chrome Beta</a>, <a href="https://www.google.com/chrome/canary/">Chrome Canary</a>, or equivalent Edge channels (<a href="https://www.microsoftedgeinsider.com/en-us/download/canary">Edge Canary</a>). Currently, they are the only browsers that support the required WebGPU feature.
+2. Launch Chrome Beta/Canary (preferably with `--enable-dawn-features=disable_robustness`).
+   For example, in MacOS with Chrome Canary, run the following command in the terminal: `/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-dawn-features=disable_robustness`
 3. Navigate to <a href="https://agentllm.vercel.app/">AgentLLM</a>
 
 Since running the model locally is very taxing, lower-tier devices may not be able to run the demo. For the best experience, try AgentLLM on a powerful desktop device.

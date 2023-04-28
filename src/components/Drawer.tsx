@@ -162,6 +162,12 @@ const Drawer = ({
             href="https://github.com/idosal/AgentLLM"
             target="_blank"
           />
+          <DrawerItem
+            icon={<FaTwitter />}
+            text="Twitter"
+            href="https://twitter.com/idosal1"
+            target="_blank"
+          />
         </div>
         <a
           href="https://github.com/reworkd/AgentGPT"

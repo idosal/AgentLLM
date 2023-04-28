@@ -43,6 +43,6 @@ export const executeTaskPrompt = new PromptTemplate({
 
 export const createTasksPrompt = new PromptTemplate({
   template:
-    "You have the following objective: `{goal}`. You have the following incomplete tasks: `{tasks}`, and have just executed the following task: `{lastTask}` and received the following result: `{result}`. Based on this, do you NEED to complete NEW tasks that have NOT been listed so that your goal is more completely reached? Do NOT repeat tasks that have already been mentioned in the existing tasks list. The response MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME. You MUST be able to parse the list with Javascript’s JSON.parse() function. You must respond with the array WITHOUT ANY OTHER TEXT.",
+    "You have the following goal: `{goal}`. You have the following incomplete tasks: `{tasks}`, and have just executed the following task: `{lastTask}` and received the following result: `{result}`. Based on this, do you NEED to complete NEW tasks that ARE NOT ALREADY ON THE LIST so that your goal is more completely reached? The response MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME. You MUST be able to parse the list with Javascript’s JSON.parse() function. You must respond with the array WITHOUT ANY OTHER TEXT.",
   inputVariables: ["goal", "tasks", "lastTask", "result"],
 });

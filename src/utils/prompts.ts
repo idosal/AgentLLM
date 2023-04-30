@@ -10,9 +10,9 @@ export const createModel = (settings: ModelSettings) => {
         shape: [32, 32, 128],
         dtype: "float32",
       },
-      wasmUrl: "vicuna-7b-v1_webgpu.wasm",
+      wasmUrl: "wizardlm-7b_webgpu.wasm",
       cacheUrl:
-        "https://huggingface.co/mlc-ai/web-lm/resolve/main/vicuna-7b-v1/",
+        "https://huggingface.co/spaces/idosal/web-llm/resolve/main/wizardlm-7b/",
       tokenizer: "tokenizer.model",
       maxGenLength: 1024,
       meanGenLength: 256,
@@ -37,12 +37,12 @@ export const controlStartGoalPrompt = new PromptTemplate({
 
 export const executeTaskPrompt = new PromptTemplate({
   template:
-    "You have the following goal: `{goal}`. You need to execute the following task on the way to achieve your goal: `{task}`. Execute the task yourself. You can do it! Return the execution response as a string. Do not return anything else.",
+    "You have the following goal: `{goal}`. You need to execute the following task on the way to achieve your goal: `{task}`. Execute the task yourself. You can do it! Return your response as a string. Do not return anything else.",
   inputVariables: ["goal", "task"],
 });
 
 export const createTasksPrompt = new PromptTemplate({
   template:
-    "You have the following goal: `{goal}`. You have the following incomplete tasks: `{tasks}`, and have just executed the following task: `{lastTask}` and received the following result: `{result}`. Based on this, do you NEED to complete NEW tasks that ARE NOT ALREADY ON THE LIST so that your goal is more completely reached? The response MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME. You MUST be able to parse the list with Javascript’s JSON.parse() function. You must respond with the array WITHOUT ANY OTHER TEXT.",
+    "You have the following goal: `{goal}`. You have the following incomplete tasks remaining to achieve your goal: `{tasks}`, and have just executed the following task: `{lastTask}` and received the following result: `{result}`. Based on this, do you NEED to complete any NEW sub-tasks that ARE NOT ALREADY ON THE INCOMPLETE TASKS LIST so that your goal is more completely reached? If you do not need new sub-tasks to better achieve your goal, respond with the string `none` AND NOTHING ELSE. Only if you do need new sub-tasks, the response MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME (you MUST be able to parse the list with Javascript’s JSON.parse() function)",
   inputVariables: ["goal", "tasks", "lastTask", "result"],
 });

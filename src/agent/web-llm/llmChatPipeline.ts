@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { LLMChatConfig } from "./llmChat";
-
+import {sentencePieceProcessor } from "./sentencepiece";
 let cTvm = undefined;
 
 class LLMChatPipeline {
@@ -123,7 +123,7 @@ class LLMChatPipeline {
     this.logitsOnCPU.copyFrom(logits);
   }
 
-  async sampleTokenFromLogits(logits: any, temperature = 0.8, top_p = 0.95) {
+  async sampleTokenFromLogits(logits: any, temperature = 0.7, top_p = 0.95) {
     this.tvm.beginScope();
     this.updateLogitsOnCPU(logits);
     this.tvm.endScope();
@@ -137,8 +137,8 @@ class LLMChatPipeline {
     const prompts = [
       "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." +
         "<s>",
-      "USER: " + input + " ",
-      "ASSISTANT:",
+       input + " ",
+      "### Response:",
     ];
     tokens.push(...(await this.tokenizer.encodeIds(prompts[0])));
     let ctxLength = tokens.length;
@@ -333,9 +333,7 @@ export async function generateCompletion(
   config: LLMChatConfig
 ): Promise<string> {
   // Initialize the LLMChatPipeline instance with required configs
-  const tokenizer = await (
-    await import("./sentencepiece/index")
-  ).sentencePieceProcessor(config.tokenizer);
+  const tokenizer = await sentencePieceProcessor(config.tokenizer);
   // const tokenizer = await tvmjsGlobalEnv.sentencePieceProcessor(config.tokenizer);
   const wasmSource = await (await fetch(config.wasmUrl)).arrayBuffer();
   const tvm = await initTvm(wasmSource, config);

@@ -21,10 +21,6 @@ function EmccWASI() {
   };
   var ENVIRONMENT_IS_WEB = typeof window == "object";
   var ENVIRONMENT_IS_WORKER = typeof importScripts == "function";
-  var ENVIRONMENT_IS_NODE =
-    typeof process == "object" &&
-    typeof process.versions == "object" &&
-    typeof process.versions.node == "string";
   var scriptDirectory = "";
   function locateFile(path) {
     if (Module["locateFile"]) {
@@ -33,7 +29,7 @@ function EmccWASI() {
     return scriptDirectory + path;
   }
   var read_, readAsync, readBinary, setWindowTitle;
-  if (ENVIRONMENT_IS_NODE) {
+  if (false) {
     var fs = require("fs");
     var nodePath = require("path");
     if (ENVIRONMENT_IS_WORKER) {
@@ -338,7 +334,7 @@ function EmccWASI() {
       typeof WebAssembly.instantiateStreaming == "function" &&
       !isDataURI(binaryFile) &&
       !isFileURI(binaryFile) &&
-      !ENVIRONMENT_IS_NODE &&
+      !false &&
       typeof fetch == "function"
     ) {
       return fetch(binaryFile, { credentials: "same-origin" }).then(
@@ -413,7 +409,7 @@ function EmccWASI() {
     abort(-1);
   }
   var _emscripten_get_now;
-  if (ENVIRONMENT_IS_NODE) {
+  if (false) {
     _emscripten_get_now = () => {
       var t = process.hrtime();
       return t[0] * 1e3 + t[1] / 1e6;
@@ -500,7 +496,7 @@ function EmccWASI() {
       typeof crypto["getRandomValues"] == "function"
     ) {
       return (view) => crypto.getRandomValues(view);
-    } else if (ENVIRONMENT_IS_NODE) {
+    } else if (false) {
       try {
         var crypto_module = require("crypto");
         var randomFillSync = crypto_module["randomFillSync"];
@@ -699,7 +695,7 @@ function EmccWASI() {
       get_char: function (tty) {
         if (!tty.input.length) {
           var result = null;
-          if (ENVIRONMENT_IS_NODE) {
+          if (false) {
             var BUFSIZE = 256;
             var buf = Buffer.alloc(BUFSIZE);
             var bytesRead = 0;

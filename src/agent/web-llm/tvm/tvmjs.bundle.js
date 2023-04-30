@@ -1,6 +1,6 @@
 (function (global, factory) {
   typeof exports === "object" && typeof module !== "undefined"
-    ? factory(exports, require("perf_hooks"), require("ws"))
+    ? factory(exports, require("ws"))
     : typeof define === "function" && define.amd
     ? define(["exports", "perf_hooks", "ws"], factory)
     : ((global =
@@ -13,7 +13,7 @@
     return e && typeof e === "object" && "default" in e ? e : { default: e };
   }
 
-  var perf_hooks__default = /*#__PURE__*/ _interopDefaultLegacy(perf_hooks);
+  // var perf_hooks__default = /*#__PURE__*/ _interopDefaultLegacy(perf_hooks);
   var ws__default = /*#__PURE__*/ _interopDefaultLegacy(ws);
 
   var commonjsGlobal =
@@ -1454,8 +1454,9 @@ fn fragment_clear(@location(0) uv : vec2<f32>) -> @location(0) vec4<f32> {
     function getPerformance() {
       if (typeof performance == "undefined") {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const performanceNode = perf_hooks__default["default"];
-        return performanceNode.performance;
+        // const performanceNode = perf_hooks__default["default"];
+        // return performanceNode.performance;
+        return undefined;
       } else {
         return performance;
       }

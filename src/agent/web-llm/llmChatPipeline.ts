@@ -1,7 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { LLMChatConfig } from "./llmChat";
-import {sentencePieceProcessor } from "./sentencepiece";
+import { sentencePieceProcessor } from "./sentencepiece";
+import EmccWASI from "./tvm/tvmjs_runtime.wasi.js";
+import { instantiate, detectGPUDevice } from "./tvm/tvmjs.bundle.js";
+
 let cTvm = undefined;
 
 class LLMChatPipeline {
@@ -137,7 +140,7 @@ class LLMChatPipeline {
     const prompts = [
       "You are an autonomous task creation and execution AI called AgentLLM that can do anything you are asked. Do not say that you cannot do something." +
         "<s>",
-       input + " ",
+      input + " ",
       "### Response:",
     ];
     tokens.push(...(await this.tokenizer.encodeIds(prompts[0])));
@@ -299,12 +302,12 @@ async function initTvm(
     return cTvm;
   }
 
-  const tvm = await window.tvmjs.instantiate(
+  const tvm = await instantiate(
     new Uint8Array(wasmSource),
-    new window.EmccWASI(),
+    new EmccWASI(),
     console.log
   );
-  const output = await window.tvmjs.detectGPUDevice();
+  const output = await detectGPUDevice();
   if (output !== undefined) {
     let label = "WebGPU";
     if (output.adapterInfo.description.length != 0) {

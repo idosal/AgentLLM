@@ -19,7 +19,6 @@ import { TaskWindow } from "../components/TaskWindow";
 import type { Message } from "../types/agentTypes";
 import { useAgent } from "../hooks/useAgent";
 import { isEmptyOrBlank } from "../utils/whitespace";
-import useScript from "../hooks/useScript";
 import HelpDialog from "../components/HelpDialog";
 import { useMessageStore, resetAllSlices } from "../components/store";
 import { isTask } from "../types/agentTypes";
@@ -47,9 +46,6 @@ const Home: NextPage = () => {
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [initProgress, setInitProgress] = React.useState(0);
   const agentUtils = useAgent();
-
-  useScript("tvmjs_runtime.wasi.js");
-  useScript("tvmjs.bundle.js");
 
   useEffect(() => {
     const key = "agentllm-modal-opened-v0.2";

@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import Head from "next/head";
 import DottedGridBackground from "../components/DottedGridBackground";
 import clsx from "clsx";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: ReactNode;

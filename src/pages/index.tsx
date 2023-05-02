@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "next-i18next";
-import { type NextPage } from "next";
+import { type NextPage, type GetStaticProps } from "next";
 import Badge from "../components/Badge";
 import DefaultLayout from "../layout/default";
 import ChatWindow from "../components/ChatWindow";
 import Drawer from "../components/Drawer";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { FaRobot, FaStar, FaPlay } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import PopIn from "../components/motions/popin";
 import { VscLoading } from "react-icons/vsc";
@@ -16,20 +17,26 @@ import AboutDialog from "../components/AboutDialog";
 // import { GPT_35_TURBO, DEFAULT_MAX_LOOPS_FREE } from "../utils/constants";
 // import { SettingsDialog } from "../components/SettingsDialog";
 import { TaskWindow } from "../components/TaskWindow";
-import type { Message } from "../types/agentTypes";
+// import { useAuth } from "../hooks/useAuth";
+import type { AgentPlaybackControl, Message } from "../types/agentTypes";
 import { useAgent } from "../hooks/useAgent";
 import { isEmptyOrBlank } from "../utils/whitespace";
-import HelpDialog from "../components/HelpDialog";
-import { useMessageStore, resetAllSlices } from "../components/store";
-import { isTask } from "../types/agentTypes";
+import {
+  useMessageStore,
+  useAgentStore,
+  resetAllMessageSlices,
+} from "../components/stores";
 import { SettingsDialog } from "../components/SettingsDialog";
-import { useSettings } from "../hooks/useSettings";
+import HelpDialog from "../components/HelpDialog";
+import { isTask, AGENT_PLAY } from "../types/agentTypes";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 // import { useSettings } from "../hooks/useSettings";
+import { SorryDialog } from "../components/SorryDialog";
+import { languages } from "../utils/languages";
 
 const Home: NextPage = () => {
-  const name = "AgentLLM";
   // const [name, setName] = React.useState<string>("");
-  const [t] = useTranslation();
+  const { i18n } = useTranslation();
   // zustand states
   const messages = useMessageStore.use.messages();
   const tasks = useMessageStore.use.tasks();
@@ -38,13 +45,24 @@ const Home: NextPage = () => {
 
   // const { session, status } = useAuth();
   // const [name, setName] = React.useState<string>("");
+  const setAgent = useAgentStore.use.setAgent();
+  const isAgentStopped = useAgentStore.use.isAgentStopped();
+  const isAgentPaused = useAgentStore.use.isAgentPaused();
+  const updateIsAgentPaused = useAgentStore.use.updateIsAgentPaused();
+  const updateIsAgentStopped = useAgentStore.use.updateIsAgentStopped();
+  const agentMode = useAgentStore.use.agentMode();
+  const agent = useAgentStore.use.agent();
+
+  // const { session, status } = useAuth();
+  const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
-  const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
-  const settingsModel = useSettings();
-  const [shouldAgentStop, setShouldAgentStop] = React.useState(false);
+  // const settingsModel = useSettings();
+
   const [showHelpDialog, setShowHelpDialog] = React.useState(false);
   const [showAboutDialog, setShowAboutDialog] = React.useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = React.useState(false);
+  const [showSorryDialog, setShowSorryDialog] = React.useState(false);
+  const [showSignInDialog, setShowSignInDialog] = React.useState(false);
   const [hasSaved, setHasSaved] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [initProgress, setInitProgress] = React.useState(0);
@@ -69,10 +87,8 @@ const Home: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (agent == null) {
-      setShouldAgentStop(false);
-    }
-  }, [agent]);
+    updateIsAgentStopped();
+  }, [agent, updateIsAgentStopped]);
 
   const handleAddMessage = (message: Message) => {
     if (!isInitialized) {
@@ -88,22 +104,42 @@ const Home: NextPage = () => {
     addMessage(message);
   };
 
+  const handlePause = (opts: {
+    agentPlaybackControl?: AgentPlaybackControl;
+  }) => {
+    if (opts.agentPlaybackControl !== undefined) {
+      updateIsAgentPaused(opts.agentPlaybackControl);
+    }
+  };
+
   const disableDeployAgent =
     agent != null || isEmptyOrBlank(name) || isEmptyOrBlank(goalInput);
-
-  const isAgentStopped = () => !agent?.isRunning || agent === null;
 
   const handleNewGoal = () => {
     const agent = new AutonomousAgent(
       name.trim(),
       goalInput.trim(),
+      i18n.language,
       handleAddMessage,
+      handlePause,
       () => setAgent(null),
-      { ...settingsModel.settings, setInitProgress }
+      { ...settingsModel.settings, setInitProgress },
+      agentMode,
     );
-    setAgent(agent);
+    setAgent(newAgent);
     setHasSaved(false);
-    resetAllSlices();
+    resetAllMessageSlices();
+    newAgent?.run().then(console.log).catch(console.error);
+  };
+
+  const handleContinue = () => {
+    if (!agent) {
+      return;
+    }
+
+    agent.updatePlayBackControl(AGENT_PLAY);
+    updateIsAgentPaused(agent.playbackControl);
+    agent.updateIsRunning(true);
     agent.run().then(console.log).catch(console.error);
   };
 
@@ -112,17 +148,18 @@ const Home: NextPage = () => {
       | React.KeyboardEvent<HTMLInputElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (e.key === "Enter" && !disableDeployAgent) {
-      if (!e.shiftKey) {
-        // Only Enter is pressed, execute the function
-        handleNewGoal();
+    // Only Enter is pressed, execute the function
+    if (e.key === "Enter" && !disableDeployAgent && !e.shiftKey) {
+      if (isAgentPaused) {
+        handleContinue();
       }
+      handleNewGoal();
     }
   };
 
   const handleStopAgent = () => {
-    setShouldAgentStop(true);
     agent?.stopAgent();
+    updateIsAgentStopped();
   };
 
   // const proTitle = (
@@ -133,9 +170,28 @@ const Home: NextPage = () => {
   //
   // const shouldShowSave =
   //   status === "authenticated" &&
-  //   !agent?.isRunning &&
+  //   isAgentStopped &&
   //   messages.length &&
   //   !hasSaved;
+
+  const firstButton =
+    isAgentPaused && !isAgentStopped ? (
+      <Button ping disabled={!isAgentPaused} onClick={handleContinue}>
+        <FaPlay size={20} />
+        <span className="ml-2">{i18n.t("Continue")}</span>
+      </Button>
+    ) : (
+      <Button disabled={disableDeployAgent} onClick={handleNewGoal}>
+        {agent == null ? (
+          i18n.t("Deploy Agent")
+        ) : (
+          <>
+            <VscLoading className="animate-spin" size={20} />
+            <span className="ml-2">{i18n.t("Running")}</span>
+          </>
+        )}
+      </Button>
+    );
 
   return (
     <DefaultLayout>
@@ -152,6 +208,14 @@ const Home: NextPage = () => {
         show={showSettingsDialog}
         close={() => setShowSettingsDialog(false)}
       />
+      <SorryDialog
+        show={showSorryDialog}
+        close={() => setShowSorryDialog(false)}
+      />
+      {/*<SignInDialog*/}
+      {/*  show={showSignInDialog}*/}
+      {/*  close={() => setShowSignInDialog(false)}*/}
+      {/*/>*/}
       <main className="flex min-h-screen flex-row">
         <Drawer
           showAbout={() => setShowAboutDialog(true)}
@@ -160,11 +224,11 @@ const Home: NextPage = () => {
         />
         <div
           id="content"
-          className="z-10 flex min-h-screen w-full items-center justify-center p-2 px-2 sm:px-4 md:px-10"
+          className="z-10 flex min-h-screen w-full items-center justify-center p-2 sm:px-4 md:px-10"
         >
           <div
             id="layout"
-            className="flex h-full w-full max-w-screen-lg flex-col items-center justify-between gap-3 py-5 md:justify-center"
+            className="flex h-full w-full max-w-screen-xl flex-col items-center justify-between gap-1 py-2 sm:gap-3 sm:py-5 md:justify-center"
           >
             <div
               id="title"
@@ -195,33 +259,34 @@ const Home: NextPage = () => {
                 className="sm:mt-4"
                 messages={messages}
                 title={"AgentLLM"}
-                showDonation={false}
                 isInitialized={isInitialized}
                 initProgress={initProgress}
                 onSave={undefined}
                 scrollToBottom
-                isAgentStopped={isAgentStopped()}
+                displaySettings
+                openSorryDialog={() => setShowSorryDialog(true)}
               />
-              {tasks.length > 0 && (
-                <TaskWindow isAgentStopped={isAgentStopped()} />
-              )}
+              {tasks.length > 0 && <TaskWindow />}
             </Expand>
 
-            <div className="flex w-full flex-col gap-2 sm:mt-4 md:mt-10">
+            <div className="flex w-full flex-col gap-2 md:m-4 ">
               {/*<Expand delay={1.2}>*/}
               {/*  <Input*/}
               {/*    inputRef={nameInputRef}*/}
               {/*    left={*/}
               {/*      <>*/}
               {/*        <FaRobot />*/}
-              {/*        <span className="ml-2">Name:</span>*/}
+              {/*        <span className="ml-2">{`${i18n?.t("AGENT_NAME", {*/}
+              {/*          ns: "indexPage",*/}
+              {/*        })}`}</span>*/}
               {/*      </>*/}
               {/*    }*/}
               {/*    value={name}*/}
               {/*    disabled={agent != null}*/}
               {/*    onChange={(e) => setName(e.target.value)}*/}
               {/*    onKeyDown={(e) => handleKeyPress(e)}*/}
-              {/*    placeholder="AgentLLM"*/}
+              {/*    placeholder="AgentGPT"*/}
+              {/*    type="text"*/}
               {/*  />*/}
               {/*</Expand>*/}
               <Expand delay={1.3}>
@@ -242,28 +307,21 @@ const Home: NextPage = () => {
               </Expand>
             </div>
             <Expand delay={1.4} className="flex gap-2">
-              <Button disabled={disableDeployAgent} onClick={handleNewGoal}>
-                {agent == null ? (
-                  t("Deploy Agent")
-                ) : (
-                  <>
-                    <VscLoading className="animate-spin" size={20} />
-                    <span className="ml-2">{t("Running")}</span>
-                  </>
-                )}
-              </Button>
+              {firstButton}
               <Button
-                disabled={agent == null}
+                disabled={agent === null}
                 onClick={handleStopAgent}
                 enabledClassName={"bg-red-600 hover:bg-red-400"}
               >
-                {shouldAgentStop ? (
+                {!isAgentStopped && agent === null ? (
                   <>
                     <VscLoading className="animate-spin" size={20} />
                     <span className="ml-2">{t("Stopping")}</span>
                   </>
                 ) : (
-                  t("Stop Agent")
+                  `${i18n?.t("BUTTON_STOP_AGENT", "BUTTON_STOP_AGENT", {
+                    ns: "indexPage",
+                  })}`
                 )}
               </Button>
             </Expand>
@@ -275,3 +333,14 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async ({ locale = "en" }) => {
+  const supportedLocales = languages.map((language) => language.code);
+  const chosenLocale = supportedLocales.includes(locale) ? locale : "en";
+
+  return {
+    props: {
+      ...(await serverSideTranslations(chosenLocale, nextI18NextConfig.ns)),
+    },
+  };
+};

@@ -10,7 +10,7 @@ import Dialog from "./Dialog";
 import Input from "./Input";
 import { LLM_MODEL_NAMES } from "../utils/constants";
 import type { ModelSettings, SettingModel } from "../utils/types";
-import LanguageCombobox from "./LanguageCombobox";
+// import LanguageCombobox from "./LanguageCombobox";
 import {AUTOMATIC_MODE, PAUSE_MODE} from "../types/agentTypes";
 import { useAgentStore } from "./stores";
 import { useTranslation } from "next-i18next";
@@ -220,14 +220,12 @@ export const SettingsDialog: React.FC<{
         {/*  value={settings.customApiKey}*/}
         {/*  onChange={(e) => updateSettings("customApiKey", e.target.value)}*/}
         {/*/>*/}
-        <LanguageCombobox />
+        {/*<LanguageCombobox />*/}
         <Input
           left={
             <>
               <FaMicrochip />
-              <span className="ml-2">{`${t("LABEL_MODEL", {
-                ns: "settings",
-              })}`}</span>
+              <span className="ml-2">{'Model'}</span>
             </>
           }
           type="combobox"

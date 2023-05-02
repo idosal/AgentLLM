@@ -62,6 +62,7 @@ const ChatWindow = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isUnsupported, setIsUnsupported] = useState(false);
   const isAgentPaused = useAgentStore.use.isAgentPaused();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const agentMode = useAgentStore.use.agentMode();
   const agent = useAgentStore.use.agent();
   const isWebSearchEnabled = useAgentStore.use.isWebSearchEnabled();
@@ -168,15 +169,15 @@ const ChatWindow = ({
       </div>
       {displaySettings && (
         <>
-          <div className="flex items-center justify-center">
-            <div className="m-1 flex items-center gap-2 rounded-lg border-[2px] border-white/20 bg-zinc-700 px-2 py-1">
-              <p className="font-mono text-sm">Web search</p>
-              <Switch
-                value={isWebSearchEnabled}
-                onChange={handleChangeWebSearch}
-              />
-            </div>
-          </div>
+          {/*<div className="flex items-center justify-center">*/}
+          {/*  <div className="m-1 flex items-center gap-2 rounded-lg border-[2px] border-white/20 bg-zinc-700 px-2 py-1">*/}
+          {/*    <p className="font-mono text-sm">Web search</p>*/}
+          {/*    <Switch*/}
+          {/*      value={isWebSearchEnabled}*/}
+          {/*      onChange={handleChangeWebSearch}*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </>
       )}
     </div>
@@ -193,6 +194,7 @@ const MacWindowHeader = (props: HeaderProps) => {
   const [t] = useTranslation();
   const isAgentPaused = useAgentStore.use.isAgentPaused();
   const agent = useAgentStore.use.agent();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const agentMode = useAgentStore.use.agentMode();
   const saveElementAsImage = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -352,7 +354,7 @@ const ChatMessage = ({
           <div className="mr-2 inline-block h-[0.9em]">
             {getTaskStatusIcon(message, {})}
           </div>
-          <span className="mr-2 font-bold">{getMessagePrefix(message, t)}</span>
+          <span className="mr-2 font-bold">{getMessagePrefix(message)}</span>
         </>
       )}
 

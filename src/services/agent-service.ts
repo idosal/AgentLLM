@@ -30,6 +30,7 @@ async function startGoalAgent(modelSettings: ModelSettings, goal: string, langua
 
     const controlCompletion = await new LLMChain({
       llm: createModel(modelSettings),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       prompt: controlStartGoalPrompt,
       verbose: true,
     }).call({
@@ -133,6 +134,8 @@ async function createTasksAgent(
   result: string,
   completedTasks: string[] | undefined
 ) {
+  async function createTask() {
+
   const completion = await new LLMChain({
     llm: createModel(modelSettings),
     prompt: createTasksPrompt,

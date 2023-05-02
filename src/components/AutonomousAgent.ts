@@ -72,7 +72,9 @@ class AutonomousAgent {
     this.shutdown = shutdown;
     this.modelSettings = modelSettings;
     this._id = v4();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.mode = mode || AUTOMATIC_MODE;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.playbackControl =
       playbackControl || this.mode == PAUSE_MODE ? AGENT_PAUSE : AGENT_PLAY;
   }
@@ -106,6 +108,7 @@ class AutonomousAgent {
 
     await this.loop();
     if (this.mode === PAUSE_MODE && !this.isRunning) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.handlePause({ agentPlaybackControl: this.playbackControl });
     }
   }
@@ -147,6 +150,7 @@ class AutonomousAgent {
     // If enabled, analyze what tool to use
     if (useAgentStore.getState().isWebSearchEnabled) {
       // Analyze how to execute a task: Reason, web search, other tools...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       analysis = await this.analyzeTask(currentTask.value);
       this.sendAnalysisMessage(analysis);
     }
@@ -197,6 +201,21 @@ class AutonomousAgent {
     await this.loop();
   }
 
+  sendAnalysisMessage(analysis: Analysis) {
+    // Hack to send message with generic test. Should use a different type in the future
+    let message = "🧠 Generating response...";
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (analysis.action == "search") {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-unsafe-member-access
+      message = `🌐 Searching the web for "${analysis.arg}"...`;
+    }
+
+    this.sendMessage({
+      type: MESSAGE_TYPE_SYSTEM,
+      value: message,
+    });
+  }
+
   private conditionalPause() {
     if (this.mode !== PAUSE_MODE) {
       return;
@@ -207,6 +226,7 @@ class AutonomousAgent {
 
     // reset playbackControl to pause so agent pauses on next set of task(s)
     if (this.playbackControl === AGENT_PLAY) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.playbackControl = AGENT_PAUSE;
     }
   }
@@ -268,6 +288,7 @@ class AutonomousAgent {
 
   async analyzeTask(task: string): Promise<Analysis> {
     if (this.shouldRunClientSide()) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return await AgentService.analyzeTaskAgent(
         this.modelSettings,
         this.goal,
@@ -329,6 +350,7 @@ class AutonomousAgent {
   }
 
   updatePlayBackControl(newPlaybackControl: AgentPlaybackControl) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.playbackControl = newPlaybackControl;
   }
 

@@ -1,22 +1,17 @@
 import React, { useEffect } from "react";
 import Button from "./Button";
 import {
-  FaKey,
   FaMicrochip,
   FaThermometerFull,
-  FaExclamationCircle,
   FaSyncAlt,
-  FaCoins,
   FaTachometerAlt,
 } from "react-icons/fa";
 import Dialog from "./Dialog";
 import Input from "./Input";
-import { LLM_MODEL_NAMES, GPT_4, WIZARDLM } from "../utils/constants";
-import Accordion from "./Accordion";
+import { LLM_MODEL_NAMES } from "../utils/constants";
 import type { ModelSettings, SettingModel } from "../utils/types";
 import LanguageCombobox from "./LanguageCombobox";
-import clsx from "clsx";
-import { AUTOMATIC_MODE, PAUSE_MODE } from "../types/agentTypes";
+import {AUTOMATIC_MODE, PAUSE_MODE} from "../types/agentTypes";
 import { useAgentStore } from "./stores";
 import { useTranslation } from "next-i18next";
 
@@ -30,6 +25,7 @@ export const SettingsDialog: React.FC<{
   });
   const [t] = useTranslation();
   const agent = useAgentStore.use.agent();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const agentMode = useAgentStore.use.agentMode();
   const updateAgentMode = useAgentStore.use.updateAgentMode();
 
@@ -46,10 +42,10 @@ export const SettingsDialog: React.FC<{
     });
   };
 
-  function keyIsValid(key: string | undefined) {
-    const pattern = /^sk-[a-zA-Z0-9]{48}$/;
-    return key && pattern.test(key);
-  }
+  // function keyIsValid(key: string | undefined) {
+  //   const pattern = /^sk-[a-zA-Z0-9]{48}$/;
+  //   return key && pattern.test(key);
+  // }
 
   const handleSave = () => {
     // if (!keyIsValid(settings.customApiKey)) {
@@ -88,9 +84,9 @@ export const SettingsDialog: React.FC<{
         }
         type="range"
         toolTipProperties={{
-          message: t(
+          message:
             "Higher values will make the output more random, while lower values make the output more focused and deterministic"
-          ),
+          ,
           disabled: false,
         }}
         attributes={{
@@ -113,9 +109,9 @@ export const SettingsDialog: React.FC<{
         }
         type="range"
         toolTipProperties={{
-          message: t(
+          message:
             "Controls the maximum number of loops that the agent will run"
-          ),
+          ,
           disabled: false,
         }}
         attributes={{
@@ -248,12 +244,14 @@ export const SettingsDialog: React.FC<{
               <span className="ml-2">Mode: </span>
             </>
           }
+          /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
           value={agentMode}
           disabled={agent !== null}
           onChange={() => null}
           setValue={updateAgentMode as (agentMode: string) => void}
           type="combobox"
           toolTipProperties={{
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             message: `${AUTOMATIC_MODE} (Default): Agent automatically executes every task. \n\n${PAUSE_MODE}: Agent pauses after every set of task(s)`,
             disabled: false,
           }}

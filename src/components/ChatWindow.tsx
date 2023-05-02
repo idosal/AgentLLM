@@ -126,7 +126,7 @@ const ChatWindow = ({
                 message={{
                   type: MESSAGE_TYPE_SYSTEM,
                   value:
-                    "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try AgentLLM in Chrome Beta/Canary on a mid-high tier desktop (see 'Help')",
+                    "❌ Error: your browser does not meet the minimum requirements (WebGPU). Please try AgentLLM on Chrome/Edge on a mid-high tier desktop (see 'Help')",
                 }}
               />
             </Expand>}

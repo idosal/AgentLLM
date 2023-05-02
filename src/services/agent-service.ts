@@ -60,6 +60,7 @@ async function executeTaskAgent(
   const completion = await new LLMChain({
     llm: createModel(modelSettings),
     prompt: executeTaskPrompt,
+    verbose: true,
   }).call({
     goal,
     task,
@@ -80,6 +81,7 @@ async function createTasksAgent(
     const completion = await new LLMChain({
       llm: createModel(modelSettings),
       prompt: createTasksPrompt,
+      verbose: true,
     }).call({
       goal,
       tasks,

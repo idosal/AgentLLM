@@ -11,6 +11,7 @@ export interface LLMChatConfig {
   kvConfig: { numLayers: number; shape: number[]; dtype: string };
   tokenizer: string;
   setInitProgress: (percent: number) => void;
+  temperature: number;
 }
 
 export interface LLMChatInput extends BaseLLMParams {
@@ -27,6 +28,7 @@ export class WebLLMChat extends LLM implements LLMChatInput {
     kvConfig: { numLayers: number; shape: number[]; dtype: string };
     tokenizer: string;
     setInitProgress: (percent: number) => void;
+    temperature: number;
   };
 
   _llmType() {

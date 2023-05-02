@@ -18,6 +18,7 @@ export const createModel = (settings: ModelSettings) => {
       meanGenLength: 256,
       maxWindowLength: 2048,
       setInitProgress: settings.setInitProgress,
+      temperature: settings.customTemperature || 0.7,
     },
   });
 };

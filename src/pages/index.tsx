@@ -22,6 +22,8 @@ import { isEmptyOrBlank } from "../utils/whitespace";
 import HelpDialog from "../components/HelpDialog";
 import { useMessageStore, resetAllSlices } from "../components/store";
 import { isTask } from "../types/agentTypes";
+import { SettingsDialog } from "../components/SettingsDialog";
+import { useSettings } from "../hooks/useSettings";
 // import { useSettings } from "../hooks/useSettings";
 
 const Home: NextPage = () => {
@@ -38,10 +40,11 @@ const Home: NextPage = () => {
   // const [name, setName] = React.useState<string>("");
   const [goalInput, setGoalInput] = React.useState<string>("");
   const [agent, setAgent] = React.useState<AutonomousAgent | null>(null);
-  // const settingsModel = useSettings();
+  const settingsModel = useSettings();
   const [shouldAgentStop, setShouldAgentStop] = React.useState(false);
   const [showHelpDialog, setShowHelpDialog] = React.useState(false);
   const [showAboutDialog, setShowAboutDialog] = React.useState(false);
+  const [showSettingsDialog, setShowSettingsDialog] = React.useState(false);
   const [hasSaved, setHasSaved] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [initProgress, setInitProgress] = React.useState(0);
@@ -73,7 +76,7 @@ const Home: NextPage = () => {
 
   const handleAddMessage = (message: Message) => {
     if (!isInitialized) {
-      if (message.type === "action" || message.type === 'task') {
+      if (message.type === "action" || message.type === "task") {
         setIsInitialized(true);
       }
     }
@@ -96,7 +99,7 @@ const Home: NextPage = () => {
       goalInput.trim(),
       handleAddMessage,
       () => setAgent(null),
-      { setInitProgress }
+      { ...settingsModel.settings, setInitProgress }
     );
     setAgent(agent);
     setHasSaved(false);
@@ -144,16 +147,16 @@ const Home: NextPage = () => {
         show={showHelpDialog}
         close={() => setShowHelpDialog(false)}
       />
-      {/*<SettingsDialog*/}
-      {/*  customSettings={settingsModel}*/}
-      {/*  show={showSettingsDialog}*/}
-      {/*  close={() => setShowSettingsDialog(false)}*/}
-      {/*/>*/}
+      <SettingsDialog
+        customSettings={settingsModel}
+        show={showSettingsDialog}
+        close={() => setShowSettingsDialog(false)}
+      />
       <main className="flex min-h-screen flex-row">
         <Drawer
           showAbout={() => setShowAboutDialog(true)}
           showHelp={() => setShowHelpDialog(true)}
-          // showSettings={() => setShowSettingsDialog(true)}
+          showSettings={() => setShowSettingsDialog(true)}
         />
         <div
           id="content"
@@ -168,7 +171,10 @@ const Home: NextPage = () => {
               className="relative flex flex-col items-center font-mono"
             >
               <div className="flex flex-row items-start shadow-2xl">
-                <img src={'/android-chrome-192x192.png'} className="w-16 h-16" />
+                <img
+                  src={"/android-chrome-192x192.png"}
+                  className="h-16 w-16"
+                />
                 <span className="text-4xl font-bold text-[#C0C0C0] xs:text-5xl sm:text-6xl">
                   Agent
                 </span>
@@ -192,9 +198,7 @@ const Home: NextPage = () => {
                 showDonation={false}
                 isInitialized={isInitialized}
                 initProgress={initProgress}
-                onSave={
-                  undefined
-                }
+                onSave={undefined}
                 scrollToBottom
                 isAgentStopped={isAgentStopped()}
               />
@@ -271,4 +275,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-

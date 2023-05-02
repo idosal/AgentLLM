@@ -42,6 +42,7 @@ class AutonomousAgent {
     shutdown: () => void,
     modelSettings: ModelSettings
   ) {
+    console.log("AutonomousAgent constructor", modelSettings);
     this.name = name;
     this.goal = goal;
     this.renderMessage = renderMessage;
@@ -153,7 +154,8 @@ class AutonomousAgent {
   }
 
   private maxLoops() {
-    return DEFAULT_MAX_LOOPS_PAID;
+    console.log('max loops', this.modelSettings.customMaxLoops);
+    return this.modelSettings.customMaxLoops || DEFAULT_MAX_LOOPS_PAID;
   }
 
   async getInitialTasks(): Promise<string[]> {

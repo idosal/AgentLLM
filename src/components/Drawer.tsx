@@ -25,9 +25,11 @@ import { signIn } from "next-auth/react";
 const Drawer = ({
   showAbout,
   showHelp,
+  showSettings,
 }: {
   showAbout: () => void;
   showHelp: () => void;
+  showSettings: () => void;
 }) => {
   const [t] = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
@@ -156,6 +158,11 @@ const Drawer = ({
             onClick={showAbout}
           />
           <DrawerItem icon={<FaQuestionCircle />} text="Help" onClick={showHelp} />
+          <DrawerItem
+            icon={<FaCog />}
+            text="Settings"
+            onClick={showSettings}
+          />
           <DrawerItem
             icon={<FaGithub />}
             text="GitHub"

@@ -211,7 +211,11 @@ class LLMChatPipeline {
     this.encodingTotalTokens = 0;
   }
 
-  async generate(inputPrompt: string, callbackUpdateResponse: any) {
+  async generate(
+    inputPrompt: string,
+    callbackUpdateResponse: any,
+    config: LLMChatConfig
+  ) {
     // this.conversation.appendMessage(this.conversation.roles[0], inputPrompt);
     // this.conversation.appendMessage(this.conversation.roles[1], "");
     // const stopStr = this.conversation.getStopStr();
@@ -253,7 +257,10 @@ class LLMChatPipeline {
       );
       this.tvm.endScope();
 
-      const nextToken = await this.sampleTokenFromLogits(logits);
+      const nextToken = await this.sampleTokenFromLogits(
+        logits,
+        config.temperature
+      );
       logits.dispose();
 
       tokens.push(nextToken);
@@ -348,7 +355,13 @@ export async function generateCompletion(
   });
   // await pipeline.asyncLoadWebGPUPiplines();
   // Generate the completion
-  const completion = await pipeline.generate(userPrompt, console.log);
+  const completion = await pipeline.generate(
+    userPrompt,
+    () => {
+      // do nothing
+    },
+    config
+  );
 
   return completion;
 }

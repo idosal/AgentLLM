@@ -4,19 +4,22 @@ import {
   DEFAULT_MAX_LOOPS_CUSTOM_API_KEY,
   DEFAULT_MAX_LOOPS_FREE,
   GPT_35_TURBO,
+  WIZARDLM,
 } from "../utils/constants";
 
-const SETTINGS_KEY = "AGENTGPT_SETTINGS";
+const SETTINGS_KEY = "AGENTLLM_SETTINGS";
 const DEFAULT_SETTINGS: ModelSettings = {
-  customModelName: GPT_35_TURBO,
-  customTemperature: 0.9 as const,
+  customModelName: WIZARDLM,
+  customTemperature: 0.7 as const,
   customMaxLoops: DEFAULT_MAX_LOOPS_CUSTOM_API_KEY,
   maxTokens: 300 as const,
   setInitProgress: console.log,
 };
 
 const loadSettings = () => {
+  console.log("loadSettings");
   if (typeof window === "undefined") {
+    console.log("No window");
     return DEFAULT_SETTINGS;
   }
 
@@ -34,8 +37,8 @@ const loadSettings = () => {
       }
     });
   } catch (error) {}
-    DEFAULT_SETTINGS.customMaxLoops = DEFAULT_MAX_LOOPS_CUSTOM_API_KEY;
-    return DEFAULT_SETTINGS;
+  // DEFAULT_SETTINGS.customMaxLoops = DEFAULT_MAX_LOOPS_CUSTOM_API_KEY;
+  return DEFAULT_SETTINGS;
 };
 
 export function useSettings(): SettingModel {

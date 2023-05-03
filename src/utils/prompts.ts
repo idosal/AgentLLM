@@ -33,7 +33,7 @@ export const createModel = (settings: ModelSettings) => {
 
 export const startGoalPrompt = new PromptTemplate({
   template:
-    'You have the following objective: `{goal}`. Create a list of zero to four tasks to be completed by you such that your goal is more closely reached or completely reached. You have access to google search for tasks that require current events or small searches. The response list MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME wrapped in quotes (EXAMPLE OF RESPONSE FORMAT: "["task name", "task name"]"). You MUST be able to parse the array of strings with Javascript’s JSON.parse() function. You must respond with the array WITHOUT ANY OTHER TEXT.',
+    'You have the following objective: `{goal}`. Create a list of zero to four tasks to be completed by you such that your goal is more closely reached or completely reached. The response list MUST be a SINGLE ARRAY OF STRINGS where each string is a TASK NAME wrapped in quotes (EXAMPLE OF RESPONSE FORMAT: "["task name", "task name"]"). You MUST be able to parse the array of strings with Javascript’s JSON.parse() function. You must respond with the array WITHOUT ANY OTHER TEXT.',
   inputVariables: ["goal"],
 });
 

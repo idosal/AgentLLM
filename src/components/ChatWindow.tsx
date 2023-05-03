@@ -320,7 +320,7 @@ const MacWindowHeader = (props: HeaderProps) => {
 
       <Menu
         icon={<CgExport />}
-        name={`${t("EXPORT", { ns: "common" })}`}
+        name={`Export`}
         onChange={() => null}
         items={exportOptions}
         styleClass={{
@@ -389,15 +389,15 @@ const ChatMessage = ({
 // Returns the translation key of the prefix
 const getMessagePrefix = (message: Message) => {
   if (message.type === MESSAGE_TYPE_GOAL) {
-    return "EMBARKING_ON_NEW_GOAL";
+    return "Embarking on a new goal...";
   } else if (message.type === MESSAGE_TYPE_THINKING) {
-    return "THINKING";
+    return "Thinking...";
   } else if (getTaskStatus(message) === TASK_STATUS_STARTED) {
-    return "TASK_ADDED";
+    return "Added task";
   } else if (getTaskStatus(message) === TASK_STATUS_COMPLETED) {
     return `Completing: ${message.value}`;
   } else if (getTaskStatus(message) === TASK_STATUS_FINAL) {
-    return "NO_MORE_TASKS";
+    return "No more subtasks for:";
   }
   return "";
 };

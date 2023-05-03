@@ -30,11 +30,32 @@ export const extractTasks = (
   text: string,
   completedTasks: string[]
 ): string[] => {
+  const extractedList = extractList(text);
+  if (extractedList.length > 0) {
+    return extractedList.filter(realTasksFilter)
+        .filter((task) => !(completedTasks || [])
+        .includes(task));
+  }
+
   return extractArray(text)
     .filter(realTasksFilter)
-    .filter((task) => !(completedTasks || []).includes(task))
-    .map(removeTaskPrefix);
+    .filter((task) => !(completedTasks || []).includes(task));
 };
+
+const extractList = (input: string): string[] => {
+  const regex = /\d+\.\s|\d+\)\s/g;
+  const formattedList: string[] = [];
+
+  const lines: string[] = input.split('\n');
+  for (const line of lines) {
+    if (regex.test(line)) {
+      const formattedLine = line.replace(regex, '').trim();
+      formattedList.push(formattedLine);
+    }
+  }
+
+  return formattedList;
+}
 
 export const extractArray = (inputStr: string): string[] => {
   // Match an outer array of strings (including nested arrays)

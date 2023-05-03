@@ -29,7 +29,7 @@ import { useAgentStore } from "./stores";
 import { AnimatePresence } from "framer-motion";
 import { CgExport } from "react-icons/cg";
 import MarkdownRenderer from "./MarkdownRenderer";
-import { Switch } from "./Switch";
+// import { Switch } from "./Switch";
 
 interface ChatWindowProps extends HeaderProps {
   children?: ReactNode;
@@ -389,7 +389,7 @@ const ChatMessage = ({
 // Returns the translation key of the prefix
 const getMessagePrefix = (message: Message) => {
   if (message.type === MESSAGE_TYPE_GOAL) {
-    return "Embarking on a new goal...";
+    return "Working towards a new goal...";
   } else if (message.type === MESSAGE_TYPE_THINKING) {
     return "Thinking...";
   } else if (getTaskStatus(message) === TASK_STATUS_STARTED) {
